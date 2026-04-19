@@ -1,0 +1,188 @@
+{
+  "name": "ai-guardian",
+  "displayName": "ai-guardian",
+  "description": "An AI-powered security guardian for your code.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "security",
+    "ai",
+    "byok",
+    "llm",
+    "owasp",
+    "vscode-extension",
+    "static-analysis"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "AI Guardian",
+      "properties": {
+        "ai-guardian.llm.provider": {
+          "type": "string",
+          "enum": [
+            "gemini",
+            "openai",
+            "claude"
+          ],
+          "default": "gemini",
+          "description": "Proveedor LLM a usar en modo BYOK."
+        },
+        "ai-guardian.llm.profile": {
+          "type": "string",
+          "enum": [
+            "free",
+            "balanced",
+            "deep"
+          ],
+          "default": "free",
+          "description": "Perfil de uso LLM: free (bajo costo), balanced o deep (mayor profundidad)."
+        },
+        "ai-guardian.llm.model": {
+          "type": "string",
+          "default": "gemini-flash-latest",
+          "description": "Modelo LLM a usar para auditoría (según proveedor)."
+        },
+        "ai-guardian.llm.baseUrl": {
+          "type": "string",
+          "default": "",
+          "description": "Endpoint base opcional del proveedor LLM (por ejemplo, proxy corporativo o gateway)."
+        },
+        "ai-guardian.llm.timeoutMs": {
+          "type": "number",
+          "default": 20000,
+          "minimum": 3000,
+          "description": "Tiempo maximo de espera por solicitud LLM en milisegundos."
+        },
+        "ai-guardian.llm.maxRetries": {
+          "type": "number",
+          "default": 2,
+          "minimum": 0,
+          "maximum": 5,
+          "description": "Cantidad maxima de reintentos para errores transitorios (429, 5xx, red)."
+        },
+        "ai-guardian.llm.maxCallsPerHour": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 500,
+          "description": "Maximo de llamadas LLM por hora para proteger cuota/costo."
+        },
+        "ai-guardian.llm.maxAuditsPerFilePerHour": {
+          "type": "number",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 200,
+          "description": "Maximo de auditorias LLM por archivo por hora."
+        },
+        "ai-guardian.llm.maxPromptChars": {
+          "type": "number",
+          "default": 4000,
+          "minimum": 500,
+          "maximum": 50000,
+          "description": "Maximo de caracteres enviados al proveedor LLM por auditoria."
+        },
+        "ai-guardian.llm.apiKey": {
+          "type": "string",
+          "description": "API key del proveedor LLM (BYOK).",
+          "default": ""
+        },
+        "ai-guardian.gemini.apiKey": {
+          "type": "string",
+          "description": "[Compatibilidad] API key de Gemini. Usa ai-guardian.llm.apiKey para configuración agnóstica.",
+          "default": ""
+        },
+        "ai-guardian.openai.apiKey": {
+          "type": "string",
+          "description": "[Compatibilidad] API key de OpenAI. Usa ai-guardian.llm.apiKey para configuración agnóstica.",
+          "default": ""
+        },
+        "ai-guardian.claude.apiKey": {
+          "type": "string",
+          "description": "[Compatibilidad] API key de Claude/Anthropic. Usa ai-guardian.llm.apiKey para configuración agnóstica.",
+          "default": ""
+        },
+        "ai-guardian.notifications.shadowMode": {
+          "type": "boolean",
+          "description": "If enabled, only high risks interrupt with popup notifications. Medium/low risks stay in diagnostics and output logs.",
+          "default": true
+        },
+        "ai-guardian.metrics.enableLocalTelemetry": {
+          "type": "boolean",
+          "description": "Habilita telemetria local (solo en tu equipo) con contadores de uso y cuota.",
+          "default": false
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "ai-guardian.helloWorld",
+        "title": "Hello World"
+      },
+      {
+        "command": "ai-guardian.configurarByok",
+        "title": "AI Guardian: Configurar BYOK (Proveedor/API Key)"
+      },
+      {
+        "command": "ai-guardian.limpiarByok",
+        "title": "AI Guardian: Limpiar API Keys BYOK"
+      },
+      {
+        "command": "ai-guardian.estadoByok",
+        "title": "AI Guardian: Ver estado BYOK"
+      },
+      {
+        "command": "ai-guardian.estadoCuotaPanel",
+        "title": "AI Guardian: Ver estado de cuota (panel)"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test",
+    "test:unit": "npm run compile-tests && node scripts/run-unit-tests.cjs",
+    "test:ci": "npm run compile && npm run test:unit",
+    "models:watch": "node scripts/provider-model-watch.cjs --fail-on-missing",
+    "models:sync": "node scripts/provider-model-watch.cjs --sync --sync-preferences --fail-on-missing --fail-on-ambiguous",
+    "models:validate": "node scripts/provider-model-watch.cjs --fail-on-missing --fail-on-ambiguous --require-keys"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.116.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "esbuild": "^0.27.3",
+    "eslint": "^9.39.3",
+    "mocha": "^11.7.4",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "fast-xml-parser": "^5.6.0",
+    "tree-sitter": "^0.21.1",
+    "tree-sitter-java": "^0.23.5",
+    "tree-sitter-typescript": "^0.23.2"
+  }
+}

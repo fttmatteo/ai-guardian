@@ -1,0 +1,16 @@
+[
+  {
+    "id": "generic-hardcoded-secret",
+    "language": "any",
+    "pattern": "(?:secret|password|apiKey)\\s*[:=]\\s*['\\\"][^'\\\"]+['\\\"]",
+    "message": "AI Guardian: Se detectó una credencial codificada en el código. Considere usar un gestor de secretos o variables de entorno.",
+    "severity": "CRITICAL"
+  },
+  {
+    "id": "java-raw-sql",
+    "language": "java",
+    "pattern": "\\.execute(?:Update|Query)\\s*\\(\\s*['\\\"](SELECT|INSERT|UPDATE|DELETE)",
+    "message": "AI Guardian: Se detectó una consulta SQL cruda. Considere usar Prepared Statements o un ORM para prevenir Inyección SQL.",
+    "severity": "HIGH"
+  }
+]

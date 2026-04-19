@@ -1,0 +1,40 @@
+name: Provider Model Validate
+
+on:
+  pull_request:
+    paths:
+      - 'src/config/model-catalog.json'
+      - 'src/config/model-replacement-preferences.json'
+      - 'src/config/settings.ts'
+      - 'scripts/provider-model-watch.cjs'
+      - 'package.json'
+      - '.github/workflows/provider-model-validate.yml'
+      - '.github/workflows/provider-model-watch.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-model-catalog:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate catalog against providers
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npm run models:validate

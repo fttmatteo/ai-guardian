@@ -1,0 +1,42 @@
+{
+  "gemini": {
+    "free": [
+      "gemini-flash-latest"
+    ],
+    "balanced": [
+      "gemini-flash-latest",
+      "gemini-1.5-pro-latest"
+    ],
+    "deep": [
+      "gemini-1.5-pro-latest",
+      "gemini-flash-latest"
+    ]
+  },
+  "openai": {
+    "free": [
+      "gpt-4.1-mini"
+    ],
+    "balanced": [
+      "gpt-4.1-mini",
+      "gpt-4.1"
+    ],
+    "deep": [
+      "gpt-4.1",
+      "gpt-4.1-mini"
+    ]
+  },
+  "claude": {
+    "free": [
+      "claude-3-5-haiku-latest",
+      "claude-3-5-sonnet-latest"
+    ],
+    "balanced": [
+      "claude-3-5-sonnet-latest",
+      "claude-3-5-haiku-latest"
+    ],
+    "deep": [
+      "claude-3-5-sonnet-latest",
+      "claude-3-opus-latest"
+    ]
+  }
+}

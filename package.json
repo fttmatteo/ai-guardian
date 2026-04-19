@@ -152,7 +152,8 @@
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",
     "release:minor": "standard-version --release-as minor",
-    "release:major": "standard-version --release-as major"
+    "release:major": "standard-version --release-as major",
+    "version": "npm run docs:sync-version && git add *.md"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",

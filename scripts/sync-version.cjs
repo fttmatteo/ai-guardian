@@ -22,7 +22,9 @@ const files = [
 
 files.forEach(file => {
   const filePath = path.join(__dirname, '..', file);
-  if (!fs.existsSync(filePath)) return;
+  if (!fs.existsSync(filePath)) {
+    return;
+  }
 
   let content = fs.readFileSync(filePath, 'utf8');
 
@@ -34,14 +36,16 @@ files.forEach(file => {
   content = content.replace(badgeRegex, newBadge);
 
   // Update Security Table (e.g. | v1.0.x | :white_check_mark: |)
-  const securityRegex = /\| (v?[\d.x<>]+) \| (✅|❌|:white_check_mark:|:x:) \|/g;
+  // We target the first row of the table after the header
+  const securityRegex = /\| (v?[\d.x<>]+) \| (✅|❌|:white_check_mark:|:x:) (?:Sí|S|Yes|No)?\s*\|/g;
   // We only want to replace the first occurrence (current version)
   let found = false;
   content = content.replace(securityRegex, (match, v, icon) => {
     if (!found && v.includes('.x')) {
       found = true;
-      const status = file.includes('.en') ? 'Yes' : 'Sí';
-      return `| ${maintenanceVersion} | ✅ ${status} |`;
+      const mark = ':white_check_mark:'; // Using standard versioning mark
+      const prefix = v.startsWith('v') ? 'v' : '';
+      return `| ${prefix}${maintenanceVersion} | ${mark} |`;
     }
     return match;
   });

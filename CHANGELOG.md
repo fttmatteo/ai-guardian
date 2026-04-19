@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.4](https://github.com/fttmatteo/ai-guardian/compare/v1.3.3...v1.3.4) (2026-04-19)
+
+
+### Bug Fixes
+
+* **docs:** improve security table regex to handle markdown spacing ([7704e8b](https://github.com/fttmatteo/ai-guardian/commit/7704e8b8456a00e0789df13c90063f4d1e204c0d))
+
 ### [1.3.3](https://github.com/fttmatteo/ai-guardian/compare/v1.3.2...v1.3.3) (2026-04-19)
 
 ### [1.3.2](https://github.com/fttmatteo/ai-guardian/compare/v1.3.0...v1.3.2) (2026-04-19)

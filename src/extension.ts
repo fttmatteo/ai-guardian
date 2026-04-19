@@ -425,14 +425,87 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
+    const auditCurrentFile = async (document: vscode.TextDocument, insertedCode?: string, insertedRange?: vscode.Range) => {
+        if (!shouldAuditDocument(document)) {
+            return;
+        }
+
+        const isInsertion = !!insertedCode;
+        const codeToAudit = isInsertion ? insertedCode! : document.getText();
+        const baseRange = insertedRange || new vscode.Range(0, 0, document.lineCount, 0);
+
+        await vscode.window.withProgress({
+            location: vscode.ProgressLocation.Notification,
+            title: isInsertion ? "AI Guardian: Analizando insercion..." : "AI Guardian: Auditando archivo...",
+            cancellable: false
+        }, async (progress) => {
+            const languageId = document.languageId;
+            const projectContext = projectContextService.getEffectiveContext(languageId);
+
+            Logger.log(`Iniciando auditoria (${isInsertion ? 'Insercion' : 'Archivo'}). Lenguaje: ${languageId}, Contexto: ${projectContext}.`);
+            
+            // 1. Auditoria Local (Siempre sobre lo que queremos auditar)
+            const localFindings = await localAuditor.audit(codeToAudit, languageId);
+            
+            // 2. Auditoria LLM (Solo si es una insercion detectada, para optimizar cuota)
+            let llmFindings: AuditResult[] = [];
+            if (isInsertion) {
+                const maxPromptChars = getLlmMaxPromptChars();
+                const llmSnippet = codeToAudit.length > maxPromptChars
+                    ? `${codeToAudit.slice(0, maxPromptChars)}\n\n/* Truncado por maxPromptChars (${maxPromptChars}) */`
+                    : codeToAudit;
+
+                const fileKey = document.uri.toString();
+                const usageDecision = llmUsageGuard.canCall(
+                    fileKey,
+                    getLlmMaxCallsPerHour(),
+                    getLlmMaxAuditsPerFilePerHour()
+                );
+
+                if (usageDecision.allowed) {
+                    llmFindings = await llmAuditor.audit(llmSnippet, projectContext);
+                    llmUsageGuard.recordCall(fileKey);
+                    persistUsageState();
+                    bumpTelemetry('llmCalls');
+                } else {
+                    Logger.warn(`Se omite auditoria LLM por control de cuota: ${usageDecision.reason}`);
+                }
+            }
+
+            const allFindings = [...localFindings, ...llmFindings];
+            
+            if (allFindings.length > 0) {
+                diagnosticProvider.updateDiagnostics(document, allFindings, baseRange);
+                
+                const shadowMode = isShadowModeEnabled();
+                const hasHighRisk = allFindings.some(f => f.risk === 'alto');
+
+                if (!shadowMode || hasHighRisk) {
+                    vscode.window.showWarningMessage(`AI Guardian encontró ${allFindings.length} riesgo(s) potencial(es).`);
+                }
+            } else {
+                diagnosticProvider.clearDiagnostics(document);
+            }
+            
+            Logger.log(`Auditoria finalizada. Hallazgos: ${allFindings.length}`);
+        });
+    };
+
+    // Comando Manual
+    const auditManualCommand = vscode.commands.registerCommand('ai-guardian.auditManual', async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (editor) {
+            await auditCurrentFile(editor.document);
+        }
+    });
+    context.subscriptions.push(auditManualCommand);
+
     let auditTimeout: NodeJS.Timeout | undefined;
 
     vscode.workspace.onDidChangeTextDocument(event => {
         if (!shouldAuditDocument(event.document)) {
             return;
         }
-
-        diagnosticProvider.clearDiagnostics(event.document);
 
         if (auditTimeout) {
             clearTimeout(auditTimeout);
@@ -441,78 +514,19 @@ export function activate(context: vscode.ExtensionContext) {
         auditTimeout = setTimeout(async () => {
             const insertedCode = detectAiCodeInsertion(event);
             if (insertedCode && event.contentChanges.length > 0) {
-                vscode.window.withProgress({
-                    location: vscode.ProgressLocation.Notification,
-                    title: "AI Guardian: Analizando código...",
-                    cancellable: false
-                }, async (progress) => {
-                    const change = event.contentChanges[0];
-                    const languageId = event.document.languageId;
-                    const projectContext = projectContextService.getEffectiveContext(languageId);
-
-                    Logger.log(`Insercion de codigo detectada. Lenguaje: ${languageId}, Contexto: ${projectContext}. Auditando...`);
-                    bumpTelemetry('totalAudits');
-
-                    const localAuditPromise = localAuditor.audit(insertedCode, languageId);
-                    const maxPromptChars = getLlmMaxPromptChars();
-                    const llmSnippet = insertedCode.length > maxPromptChars
-                        ? `${insertedCode.slice(0, maxPromptChars)}\n\n/* Truncado por maxPromptChars (${maxPromptChars}) */`
-                        : insertedCode;
-
-                    if (insertedCode.length > maxPromptChars) {
-                        Logger.warn(`Snippet truncado para LLM por limite maxPromptChars=${maxPromptChars}.`);
-                        bumpTelemetry('promptTruncations');
-                    }
-
-                    const fileKey = event.document.uri.toString();
-                    const usageDecision = llmUsageGuard.canCall(
-                        fileKey,
-                        getLlmMaxCallsPerHour(),
-                        getLlmMaxAuditsPerFilePerHour()
-                    );
-
-                    let llmAuditPromise: Promise<AuditResult[]>;
-                    if (!usageDecision.allowed) {
-                        Logger.warn(`Se omite auditoria LLM por control de cuota: ${usageDecision.reason} Modo local activo.`);
-                        bumpTelemetry('quotaSkips');
-                        llmAuditPromise = Promise.resolve([]);
-                    } else {
-                        llmAuditPromise = llmAuditor.audit(llmSnippet, projectContext).then(result => {
-                            llmUsageGuard.recordCall(fileKey);
-                            persistUsageState();
-                            bumpTelemetry('llmCalls');
-                            return result;
-                        });
-                    }
-
-                    const auditPromises: Promise<AuditResult[]>[] = [localAuditPromise, llmAuditPromise];
-
-                    if ((projectContext === 'SpringBoot' || projectContext === 'Java') && languageId === 'java') {
-                        auditPromises.push(jacocoService.auditClassFromFile(event.document));
-                    }
-
-                    const results = await Promise.all(auditPromises);
-                    const allFindings: AuditResult[] = results.flat();
-                    const [localFindings, llmFindings] = await Promise.all([localAuditPromise, llmAuditPromise]);
-
-                    Logger.log(`Auditoria completada. Se encontraron ${allFindings.length} riesgos potenciales (local=${localFindings.length}, llm=${llmFindings.length}).`);
-
-                    if (allFindings.length > 0) {
-                        const insertedRange = new vscode.Range(change.range.start, change.range.end.translate(0, change.text.length));
-                        diagnosticProvider.updateDiagnostics(event.document, allFindings, insertedRange);
-
-                        const shadowMode = isShadowModeEnabled();
-                        const hasHighRisk = allFindings.some(finding => finding.risk === 'alto');
-
-                        if (!shadowMode || hasHighRisk) {
-                            vscode.window.showWarningMessage(`AI Guardian encontró ${allFindings.length} riesgo(s) potencial(es).`);
-                        } else {
-                            Logger.log('Modo sombra activo: hallazgos medio/bajo registrados sin interrumpir con popup.');
-                        }
-                    }
-                });
+                const change = event.contentChanges[0];
+                const insertedRange = new vscode.Range(change.range.start, change.range.end.translate(0, change.text.length));
+                await auditCurrentFile(event.document, insertedCode, insertedRange);
             }
         }, 1500);
+    });
+
+    vscode.workspace.onDidOpenTextDocument(document => {
+        void auditCurrentFile(document);
+    });
+
+    vscode.workspace.onDidSaveTextDocument(document => {
+        void auditCurrentFile(document);
     });
 
     vscode.workspace.onDidCloseTextDocument(document => {

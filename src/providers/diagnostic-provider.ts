@@ -22,13 +22,18 @@ export class DiagnosticProvider {
 
     public updateDiagnostics(document: vscode.TextDocument, results: AuditResult[], insertedRange: vscode.Range) {
         if (!results || results.length === 0) {
-            this.diagnosticCollection.clear();
+            this.diagnosticCollection.delete(document.uri);
             return;
         }
 
         const diagnostics: vscode.Diagnostic[] = results.map(result => {
+            let targetRange = insertedRange;
+            if (result.line !== undefined && result.line < document.lineCount) {
+                targetRange = document.lineAt(result.line).range;
+            }
+
             const diagnostic = new vscode.Diagnostic(
-                insertedRange,
+                targetRange,
                 `${result.reason}\nSugerencia: ${result.fixSuggestion}`,
                 mapRiskToSeverity(result.risk)
             );

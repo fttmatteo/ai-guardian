@@ -65,17 +65,23 @@ export class LocalRuleAuditor {
             return findings;
         }
 
+        const lines = code.split('\n');
+
         for (const rule of this.rules) {
             if (rule.language === 'any' || rule.language === languageId) {
                 try {
                     const regex = new RegExp(rule.pattern, 'i');
-                    if (regex.test(code)) {
-                        findings.push({
-                            risk: mapSeverityToRisk(rule.severity),
-                            reason: rule.message,
-                            fixSuggestion: 'Revise el código para eliminar el patrón detectado por la regla local.'
-                        });
-                    }
+                    
+                    lines.forEach((lineText, index) => {
+                        if (regex.test(lineText)) {
+                            findings.push({
+                                risk: mapSeverityToRisk(rule.severity),
+                                reason: rule.message,
+                                fixSuggestion: 'Revise el código para eliminar el patrón detectado por la regla local.',
+                                line: index
+                            });
+                        }
+                    });
                 } catch (error) {
                     Logger.error(`Regex invalida en regla local (${rule.id}).`, error);
                 }

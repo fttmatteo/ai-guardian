@@ -130,6 +130,10 @@
       {
         "command": "ai-guardian.estadoCuotaPanel",
         "title": "AI Guardian: Ver estado de cuota (panel)"
+      },
+      {
+        "command": "ai-guardian.auditManual",
+        "title": "AI Guardian: Analizar archivo actual"
       }
     ]
   },

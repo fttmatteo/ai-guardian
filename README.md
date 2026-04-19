@@ -202,14 +202,15 @@ npm run models:validate
 - `.github/workflows/`: CI/CD y validaciones automáticas.
 - `.vscode/`: tareas y launch de desarrollo compartibles.
 
-## Contribución
+## Contribuciones
 
-Contribuciones son bienvenidas.
+Las contribuciones son bienvenidas. Antes de abrir un Pull Request, revisa:
 
-- Reportar bugs o propuestas en issues.
-- Aportar reglas de seguridad y casos de prueba.
-- Incluir pruebas de regresión para cambios de heurística o auditoría.
+- `CONTRIBUTING.md` para flujo de trabajo, estándares y checklist de calidad.
+- `SECURITY.md` para reporte responsable de vulnerabilidades.
 
-## Licencia
+## Créditos y Licencia
 
-MIT
+Creado y mantenido por **[Mateo Valencia Ardila](https://github.com/fttmatteo)**.
+
+Este software operada bajo la **Licencia MIT**. Eres libre de distribuir, editar o utilizar esta base arquitectónica incluso para desarrollo comercial bajo la principal condición obligatoria de preservar explícitamente los párrafos de derechos de autor y reconocimiento a Mateo Valencia como creador matriz. (Lee el documento `LICENSE` para más instrucciones legales).

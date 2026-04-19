@@ -1,8 +1,8 @@
-# Guía de Contribución para USB Guard
+# Guía de Contribución para AI Guardian
 
 _[Read in English](CONTRIBUTING.en.md)_
 
-¡Gracias por mostrar interés en desarrollar y mejorar **USB Guard**! Como un proyecto de código abierto, dependemos de mentes brillantes y analíticas para robustecer la arquitectura que nos protege a todos.
+¡Gracias por mostrar interés en desarrollar y mejorar **AI Guardian**! Como un proyecto de código abierto, dependemos de mentes brillantes y analíticas para robustecer la arquitectura que nos protege a todos.
 
 ## Entorno de Desarrollo
 

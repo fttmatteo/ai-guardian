@@ -1,6 +1,14 @@
-# Registro de Cambios
+# Changelog
 
-Todos los cambios notables en este proyecto serán documentados en este archivo.
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [1.3.2](https://github.com/fttmatteo/ai-guardian/compare/v1.3.0...v1.3.2) (2026-04-19)
+
+
+### Features
+
+* add custom standard-version updater for Markdown file tracking ([b66ea3a](https://github.com/fttmatteo/ai-guardian/commit/b66ea3af118806a84ed5c8e5574b9bc217b00ad2))
+
 ## [1.3.0](https://github.com/fttmatteo/ai-guardian/compare/v1.2.0...v1.3.0) (2026-04-19)
 
 

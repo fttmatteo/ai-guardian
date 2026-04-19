@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "postbump": "node scripts/sync-version.cjs",
     "posttag": "git push --follow-tags origin main"
   },
   "bumpFiles": [

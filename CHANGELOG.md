@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.3](https://github.com/fttmatteo/ai-guardian/compare/v1.4.2...v1.4.3) (2026-04-19)
+
+
+### Features
+
+* implement project context detection and integrate LLM configuration workflow in extension activation ([9ed8bcf](https://github.com/fttmatteo/ai-guardian/commit/9ed8bcfc3d0bda6995a757eff4c30b737c896a50))
+
 ### [1.4.2](https://github.com/fttmatteo/ai-guardian/compare/v1.4.1...v1.4.2) (2026-04-19)
 
 

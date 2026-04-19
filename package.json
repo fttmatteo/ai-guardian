@@ -2,7 +2,7 @@
   "name": "ai-guardian",
   "displayName": "AI Guardian: Auditoría de Seguridad con IA",
   "description": "Un guardián de seguridad potenciado por IA para tu código.",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "publisher": "fttmatteo",
   "private": false,
   "icon": "docs/logo.png",

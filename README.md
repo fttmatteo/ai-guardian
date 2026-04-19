@@ -7,82 +7,76 @@
 </p>
 
 <p align="center">
-  <strong>El guardián de seguridad potenciado por IA para tu código.</strong><br>
-  <em>Auditoría de seguridad inteligente y preventiva para el flujo de trabajo moderno.</em>
+  <strong>Seguridad inteligente y preventiva para tu código asistido por IA.</strong><br>
+  <em>Protege tu flujo de trabajo detectando riesgos de OWASP en tiempo real.</em>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Versión-1.4.5-blue.svg" alt="Versión">
   <img src="https://img.shields.io/badge/Licencia-MIT-green.svg" alt="Licencia">
-  <img src="https://img.shields.io/badge/VS%20Code-v1.85.0+-blue" alt="Versión VS Code">
   <img src="https://img.shields.io/badge/Seguridad-OWASP-red" alt="Enfocado en Seguridad">
+  <img src="https://img.shields.io/badge/Modo-Proactivo-orange" alt="Auditoría Proactiva">
 </p>
-
 
 ## ¿Qué es AI Guardian?
 
-**AI Guardian** es una extensión de VS Code diseñada para auditar la seguridad de tu código, especialmente aquel generado o asistido por Inteligencia Artificial. Combina análisis estático local ultrarrápido con la potencia semántica de modelos LLM avanzados bajo un modelo **BYOK (Bring Your Own Key)**.
+AI Guardian es una extensión de VS Code diseñada para auditar la seguridad de tu código, especialmente aquel generado o asistido por Inteligencia Artificial. Combina análisis estático local ultrarrápido con la potencia semántica de modelos LLM avanzados bajo un modelo BYOK (Bring Your Own Key).
 
-## Características Principales
+### Características
 
-- **Auditoría Híbrida**: Combina reglas locales (basadas en patrones) con análisis semántico vía LLM.
-- **BYOK Multi-Proveedor**: Soporte nativo para **Gemini, OpenAI y Claude**.
-- **Detección de Inserciones**: Heurística avanzada para detectar bloques grandes de código pegados de IAs.
-- **Guardrails Operativos**: Control estricto de cuota y costos para proteger tu bolsillo.
-- **Modo Sombra**: Notificaciones inteligentes que solo te interrumpen en riesgos críticos.
-- **Métricas de Consumo**: Panel visual de uso y estado de cuota en tiempo real.
-- **Integración JaCoCo**: Detección de brechas de cobertura en proyectos Java.
+- **Auditoría Industrial (OWASP)**: Detecta Inyecciones SQL, Path Traversal, SSRF y Criptografía Débil alineado con los estándares del OWASP Top 10.
+- **Proactividad Total**: El Guardián escanea automáticamente al abrir archivos, al guardar o al detectar una inserción de código. No tienes que configurar nada.
+- **Soporte Multilingüe**: Protección nativa para **Java, Python, JavaScript, TypeScript y React**.
+- **Auditoría Híbrida Inteligente**: Combina la velocidad de reglas locales con la profundidad semántica de LLMs bajo el modelo **BYOK (Bring Your Own Key)**.
+- **Privacidad Garantizada**: Tus API Keys se guardan de forma segura en tu sistema y tus datos solo viajan al proveedor que tú elijas (Gemini, OpenAI o Claude).
 
-## Inicio Rápido
+## Inicio Rápido en 3 Pasos
 
 ### 1. Instalación
-Busca "AI Guardian" en el Marketplace de VS Code o instala las dependencias localmente para desarrollo:
-```bash
-npm install
-npm run compile
-```
+Busca **"AI Guardian"** en el Marketplace de VS Code e instálalo.
 
-### 2. Configuración BYOK
+### 2. Configuración (Opcional pero Recomendado)
+Para activar la potencia de la IA y auditorías semánticas:
 1. Abre la paleta de comandos (`Ctrl+Shift+P`).
 2. Ejecuta: `AI Guardian: Configurar BYOK (Proveedor/API Key)`.
-3. Selecciona tu proveedor (Gemini, OpenAI o Claude).
-4. Elige un perfil (**free, balanced o deep**).
-5. Ingresa tu API Key (se guarda de forma segura en `SecretStorage`).
+3. Ingresa tu API Key de Gemini, OpenAI o Claude.
 
-## Configuración
+### 3. ¡A trabajar!
+Solo abre tus archivos de código. Si hay un riesgo detectado, verás subrayados de colores y una notificación instantánea. También puedes forzar un escaneo con: `AI Guardian: Analizar archivo actual`.
 
-Puedes personalizar el comportamiento de AI Guardian en la sección de Settings:
+## Personalización
 
-| Configuración | Descripción | Por Defecto |
-| :--- | :--- | :--- |
-| `ai-guardian.llm.provider` | Proveedor LLM elegido. | `gemini` |
-| `ai-guardian.llm.profile` | Perfil de profundidad (free, balanced, deep). | `free` |
-| `ai-guardian.llm.maxCallsPerHour` | Límite de llamadas para proteger costos. | `30` |
-| `ai-guardian.notifications.shadowMode` | Solo interrumpir en riesgos altos. | `true` |
+Puedes ajustar tu nivel de seguridad en los **Settings** de VS Code:
+- **Modo Sombra**: Si está activo, solo las alertas críticas interrumpirán con popups, el resto se quedan silenciosas en la lista de problemas.
+- **Perfiles de IA**: Selecciona entre `free`, `balanced` o `deep` para equilibrar el costo y la calidad del análisis.
 
-## Reglas Locales
+## Contribuciones y Seguridad
+¿Quieres mejorar el Guardián o encontraste algo? 
+- Revisa nuestra guía de [Contribuciones](CONTRIBUTING.md).
+- Lee nuestra política de [Seguridad](SECURITY.md).
 
-AI Guardian usa un archivo `rules.json` en la raíz de tu proyecto para auditorías instantáneas sin costo de API:
+<details>
+<summary>🛠️ <b>Sección para Desarrolladores</b> (Haz clic para expandir)</summary>
 
-```json
-[
-  {
-    "id": "raw-sql-check",
-    "language": "java",
-    "pattern": "\\.execute(?:Update|Query)?\\s*\\(",
-    "message": "Posible Inyección SQL detectada.",
-    "severity": "HIGH"
-  }
-]
-```
+### Compilación y Desarrollo
+Si deseas clonar este repo y trabajar en él:
+1. `npm install` - Instala dependencias.
+2. `npm run watch` - Compilación en tiempo real.
+3. `F5` - Lanza una instancia de VS Code con la extensión cargada.
 
-## Contribuciones
+### Estructura del Proyecto
+- `src/core/`: Motores de detección y servicios base.
+- `src/auditors/`: Lógica de análisis local y LLM.
+- `src/config/`: Reglas por defecto y configuración.
 
-¿Quieres mejorar AI Guardian? ¡Eres bienvenido! Por favor revisa nuestra guía de [CONTRIBUTING.md](CONTRIBUTING.md).
+### Añadir Reglas Locales
+Puedes extender la seguridad añadiendo un archivo `rules.json` en la raíz de tu proyecto con el formato de objetos `Rule`.
 
-## Seguridad
-
-La seguridad es mi prioridad. Si encuentras una vulnerabilidad, por favor consulta nuestra política en [SECURITY.md](SECURITY.md).
+### Ejecución de Pruebas
+Para asegurar la estabilidad del Guardián:
+- `npm run test:unit` - Ejecuta las pruebas unitarias de la lógica core.
+- `npm run test` - Lanza las pruebas de integración en una instancia de VS Code.
+</details>
 
 ## Créditos y Licencia
 

@@ -7,85 +7,79 @@
 </p>
 
 <p align="center">
-  <strong>The AI-powered security guardian for your code.</strong><br>
-  <em>Intelligent and preventive security auditing for the modern workflow.</em>
+  <strong>Intelligent and preventive security for your AI-assisted code.</strong><br>
+  <em>Protect your workflow by detecting OWASP risks in real-time.</em>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-1.4.5-blue.svg" alt="Version">
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/VS%20Code-v1.85.0+-blue" alt="VS Code Version">
   <img src="https://img.shields.io/badge/Security-OWASP-red" alt="Security Focused">
+  <img src="https://img.shields.io/badge/Mode-Proactive-orange" alt="Proactive Auditing">
 </p>
 
 ## What is AI Guardian?
 
-**AI Guardian** is a VS Code extension designed to audit the security of your code, especially when it's generated or assisted by Artificial Intelligence. It combines lightning-fast local static analysis with the semantic power of advanced LLM models under a **BYOK (Bring Your Own Key)** model.
+AI Guardian is a VS Code extension designed to audit your code's security, especially that generated or assisted by Artificial Intelligence. It combines ultra-fast local static analysis with the semantic power of advanced LLM models under a BYOK (Bring Your Own Key) model.
 
-## Key Features
+### Features
 
-- **Hybrid Auditing**: Combines local pattern-based rules with semantic analysis via LLM.
-- **Multi-Provider BYOK**: Native support for **Gemini, OpenAI, and Claude**.
-- **Insertion Detection**: Advanced heuristics to detect large blocks of code pasted from AIs.
-- **Operational Guardrails**: Strict quota and cost control to protect your budget.
-- **Shadow Mode**: Intelligent notifications that only interrupt you for critical risks.
-- **Usage Metrics**: Visual real-time dashboard for consumption and quota status.
-- **JaCoCo Integration**: Coverage gap detection for Java projects.
+- **Industrial Auditing (OWASP)**: Detects SQL Injections, Path Traversal, SSRF, and Weak Cryptography aligned with OWASP Top 10 standards.
+- **Total Proactivity**: The Guardian automatically scans upon opening files, saving, or detecting code insertions. You don't have to configure anything.
+- **Multilingual Support**: Native protection for **Java, Python, JavaScript, TypeScript, and React**.
+- **Intelligent Hybrid Auditing**: Combines the speed of local rules with the semantic depth of LLMs under the **BYOK (Bring Your Own Key)** model.
+- **Guaranteed Privacy**: Your API Keys are securely stored on your system, and your data only travels to the provider you choose (Gemini, OpenAI, or Claude).
 
-## Quick Start
+## Quick Start in 3 Steps
 
 ### 1. Installation
-Search for "AI Guardian" in the VS Code Marketplace or install dependencies locally for development:
-```bash
-npm install
-npm run compile
-```
+Search for **"AI Guardian"** in the VS Code Marketplace and install it.
 
-### 2. BYOK Setup
-1. Open the Command Palette (`Ctrl+Shift+P`).
-2. Run: `AI Guardian: Setup BYOK (Provider/API Key)`.
-3. Select your provider (Gemini, OpenAI, or Claude).
-4. Choose a profile (**free, balanced, or deep**).
-5. Enter your API Key (safely stored in `SecretStorage`).
+### 2. Configuration (Optional but Recommended)
+To activate the power of AI and semantic audits:
+1. Open the command palette (`Ctrl+Shift+P`).
+2. Run: `AI Guardian: Configurar BYOK (Proveedor/API Key)`.
+3. Enter your Gemini, OpenAI, or Claude API Key.
 
-## Configuration
+### 3. Get to work!
+Just open your code files. If a detected risk exists, you'll see color-coded underlines and an instant notification. You can also force a scan with: `AI Guardian: Analizar archivo actual`.
 
-You can customize AI Guardian's behavior in the Settings section:
+## Customization
 
-| Setting | Description | Default |
-| :--- | :--- | :--- |
-| `ai-guardian.llm.provider` | Chosen LLM provider. | `gemini` |
-| `ai-guardian.llm.profile` | Depth profile (free, balanced, deep). | `free` |
-| `ai-guardian.llm.maxCallsPerHour` | Call limit to protect costs. | `30` |
-| `ai-guardian.notifications.shadowMode` | Only interrupt on high risks. | `true` |
+You can adjust your security level in the VS Code **Settings**:
+- **Shadow Mode**: If active, only critical alerts will interrupt with popups; the rest remain silent in the problems list.
+- **AI Profiles**: Select between `free`, `balanced`, or `deep` to balance the cost and quality of the analysis.
 
-## Local Rules
+## Contributions and Security
+Do you want to improve the Guardian or found something? 
+- Review our [Contribution Guide](CONTRIBUTING.en.md).
+- Read our [Security Policy](SECURITY.en.md).
 
-AI Guardian uses a `rules.json` file at your project root for instant, cost-free audits:
+<details>
+<summary>🛠️ <b>Developer Section</b> (Click to expand)</summary>
 
-```json
-[
-  {
-    "id": "raw-sql-check",
-    "language": "java",
-    "pattern": "\\.execute(?:Update|Query)?\\s*\\(",
-    "message": "Possible SQL Injection detected.",
-    "severity": "HIGH"
-  }
-]
-```
+### Compilation and Development
+If you want to clone this repo and work on it:
+1. `npm install` - Install dependencies.
+2. `npm run watch` - Real-time compilation.
+3. `F5` - Launches a VS Code instance with the extension loaded.
 
+### Project Structure
+- `src/core/`: Detection engines and base services.
+- `src/auditors/`: Local and LLM analysis logic.
+- `src/config/`: Default rules and configuration.
 
-## Contributing
+### Adding Local Rules
+You can extend security by adding a `rules.json` file at the root of your project with the `Rule` object format.
 
-Looking to improve AI Guardian? You're welcome! Please check our [CONTRIBUTING.en.md](CONTRIBUTING.en.md) guide.
-
-## Security
-
-Security is my priority. If you find a vulnerability, please refer to our [SECURITY.en.md](SECURITY.en.md) policy.
+### Running Tests
+To ensure the Guardian's stability:
+- `npm run test:unit` - Runs unit tests for core logic.
+- `npm run test` - Launches integration tests in a VS Code instance.
+</details>
 
 ## Credits and License
 
 Created and maintained by **[Mateo Valencia Ardila](https://github.com/fttmatteo)**.
 
-This software operates under the **MIT License**. You are free to distribute, edit, or use this architectural base even for commercial development under the main mandatory condition of explicitly preserving the copyright and attribution paragraphs to Mateo Valencia as the original creator. (Read the `LICENSE` document for more legal instructions).
+This software operates under the **MIT License**. You are free to distribute, edit or use this architectural base even for commercial development under the mandatory condition of explicitly preserving the copyright paragraphs and acknowledgement to Mateo Valencia as the master creator. (Read the `LICENSE` document for more legal instructions).

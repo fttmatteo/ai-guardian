@@ -1,6 +1,21 @@
-# Change Log
+# Registro de Cambios
 
-Todos los cambios relevantes de la extensión se documentan aquí.
+Todos los cambios notables en este proyecto serán documentados en este archivo.
+## 1.1.0 (2026-04-19)
+
+
+### Features
+
+* Actualizar CHANGELOG y README para reflejar cambios en la gestión de API keys y contribuciones ([6f73a74](https://github.com/fttmatteo/ai-guardian/commit/6f73a743fcfe6d998d883a459cc43683d7f94626))
+* Actualizar documentación y reglas de auditoría para mejorar la detección de riesgos ([809cd96](https://github.com/fttmatteo/ai-guardian/commit/809cd96951d74450b169850a688b76b97eff197c))
+* Implement AI code insertion detection and LLM usage management ([a16bcf0](https://github.com/fttmatteo/ai-guardian/commit/a16bcf0c7132aa6ddb1b96682a7497056193fd85))
+* integrate standard-version for automated release management and changelog generation ([74f4b38](https://github.com/fttmatteo/ai-guardian/commit/74f4b38628782c111d7758ad9f7d5fcfc97fc5b2))
+* Simplificar la gestión de API keys LLM y mejorar mensajes de advertencia ([1f137fc](https://github.com/fttmatteo/ai-guardian/commit/1f137fc2400fcdda888f2b4b1ca82b8255a6a29d))
+
+
+### Documentation
+
+* add project documentation, branding assets, and automated versioning script ([3eeca8d](https://github.com/fttmatteo/ai-guardian/commit/3eeca8d745f6400757f35ab556120bf3dc2aabee))
 
 ## [1.0.0]
 

@@ -19,6 +19,13 @@ Todos los cambios relevantes de la extensión se documentan aquí.
 - Modo sombra para reducir interrupciones por hallazgos de riesgo medio/bajo.
 - Filtro de archivos auditables para evitar ruido en logs/output/plaintext.
 - Suite inicial de pruebas con smoke test y tests de detector de cambios.
+- **Documentación Profesional Bilingüe**:
+	- Rediseño completo de README en Español e Inglés.
+	- Nuevas guías de contribución (`CONTRIBUTING.md`) y políticas de seguridad (`SECURITY.md`).
+	- Repositorio de activos visuales en carpeta `docs/`.
+- **Automatización de Versionamiento**:
+	- Script de sincronización automática para propagar la versión de `package.json` a toda la documentación.
+	- Integración con hooks de ciclo de vida de NPM.
 
 ### Changed
 
@@ -28,4 +35,5 @@ Todos los cambios relevantes de la extensión se documentan aquí.
 - Preferencias de reemplazo de modelos centralizadas en `src/config/model-replacement-preferences.json`.
 - Eliminado soporte legacy de API keys en settings; BYOK usa `SecretStorage` como única fuente.
 - Mensajes y logs estandarizados al español.
+- Metadatos de la extensión (`displayName`, `description`) localizados al español para el Marketplace.
 - README reemplazado por documentación real de producto.

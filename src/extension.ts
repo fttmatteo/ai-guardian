@@ -16,7 +16,8 @@ const SUPPORTED_LANGUAGES = new Set([
     'javascript',
     'typescript',
     'javascriptreact',
-    'typescriptreact'
+    'typescriptreact',
+    'python'
 ]);
 
 function shouldAuditDocument(document: vscode.TextDocument): boolean {

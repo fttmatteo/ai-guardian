@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Logger } from './logger';
 
-export type ProjectContext = 'SpringBoot' | 'React' | 'Java' | 'Unknown';
+export type ProjectContext = 'SpringBoot' | 'React' | 'Java' | 'Python' | 'Unknown';
 
 export class ProjectContextService {
     private context: ProjectContext = 'Unknown';
@@ -43,6 +43,15 @@ export class ProjectContextService {
                 return;
             }
         }
+        const pythonFiles = ['requirements.txt', 'pyproject.toml', 'setup.py', 'environment.yml'];
+        for (const file of pythonFiles) {
+            const filePath = path.join(workspaceRoot, file);
+            if (fs.existsSync(filePath)) {
+                this.context = 'Python';
+                Logger.log(`Contexto Python detectado desde ${file}.`);
+                return;
+            }
+        }
         
         // El contexto desconocido es normal en archivos sueltos o carpetas sin config estandar.
         this.context = 'Unknown';
@@ -63,6 +72,10 @@ export class ProjectContextService {
 
         if (languageId === 'javascriptreact' || languageId === 'typescriptreact') {
             return 'React';
+        }
+
+        if (languageId === 'python') {
+            return 'Python';
         }
 
         return 'Unknown';

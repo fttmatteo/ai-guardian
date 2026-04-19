@@ -149,7 +149,10 @@
     "models:sync": "node scripts/provider-model-watch.cjs --sync --sync-preferences --fail-on-missing --fail-on-ambiguous",
     "models:validate": "node scripts/provider-model-watch.cjs --fail-on-missing --fail-on-ambiguous --require-keys",
     "docs:sync-version": "node scripts/sync-version.cjs",
-    "version": "npm run docs:sync-version && git add *.md"
+    "release": "standard-version",
+    "release:patch": "standard-version --release-as patch",
+    "release:minor": "standard-version --release-as minor",
+    "release:major": "standard-version --release-as major"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -161,6 +164,7 @@
     "eslint": "^9.39.3",
     "mocha": "^11.7.4",
     "npm-run-all": "^4.1.5",
+    "standard-version": "^9.5.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.56.1"
   },

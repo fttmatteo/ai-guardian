@@ -1,8 +1,16 @@
 # Registro de Cambios
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
-## 1.1.0 (2026-04-19)
+## [1.2.0](https://github.com/fttmatteo/ai-guardian/compare/v1.1.0...v1.2.0) (2026-04-19)
 
+
+### Features
+
+* add automated version synchronization script for documentation files ([a00f694](https://github.com/fttmatteo/ai-guardian/commit/a00f694b6340e7d017444e2296ed9688e1938665))
+* add version synchronization script and update documentation badges and security tables ([3cb1a8a](https://github.com/fttmatteo/ai-guardian/commit/3cb1a8a3e259ea51e831af999d046b99c17f38e1))
+* add version synchronization script and update documentation to v1.1.x ([253532f](https://github.com/fttmatteo/ai-guardian/commit/253532f2c5357704fa823775c614e99eac822dc0))
+
+## 1.1.0 (2026-04-19)
 
 ### Features
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.5](https://github.com/fttmatteo/ai-guardian/compare/v1.4.4...v1.4.5) (2026-04-19)
+
+
+### Features
+
+* implement local rule-based auditing system with manual trigger support ([c2c6247](https://github.com/fttmatteo/ai-guardian/commit/c2c6247b7399901078db02ed1eb49165d6a34988))
+
 ### [1.4.4](https://github.com/fttmatteo/ai-guardian/compare/v1.4.3...v1.4.4) (2026-04-19)
 
 

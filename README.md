@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Versión-1.4.4-blue.svg" alt="Versión">
+  <img src="https://img.shields.io/badge/Versión-1.4.5-blue.svg" alt="Versión">
   <img src="https://img.shields.io/badge/Licencia-MIT-green.svg" alt="Licencia">
   <img src="https://img.shields.io/badge/VS%20Code-v1.85.0+-blue" alt="Versión VS Code">
   <img src="https://img.shields.io/badge/Seguridad-OWASP-red" alt="Enfocado en Seguridad">

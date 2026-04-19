@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.4](https://github.com/fttmatteo/ai-guardian/compare/v1.4.3...v1.4.4) (2026-04-19)
+
+
+### Features
+
+* implement initial set of OWASP-based security audit rules for multiple languages ([c16afa3](https://github.com/fttmatteo/ai-guardian/commit/c16afa33a678e14e825402108b7bd79c416c5236))
+
 ### [1.4.3](https://github.com/fttmatteo/ai-guardian/compare/v1.4.2...v1.4.3) (2026-04-19)
 
 

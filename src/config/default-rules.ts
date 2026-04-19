@@ -5,8 +5,8 @@ export const DEFAULT_RULES: Rule[] = [
     {
         id: 'java-sql-injection',
         language: 'java',
-        pattern: '\\.execute(?:Update|Query)?\\s*\\(.*\\+.*\\)',
-        message: 'Posible Inyección SQL [OWASP A03]. Evite concatenar parámetros en consultas.',
+        pattern: '(?:query|sql|stmt).*=.*\\+.*|\\.execute(?:Update|Query)?\\s*\\(.*\\+.*\\)',
+        message: 'Posible Inyección SQL [OWASP A03]. Evite construir consultas concatenando datos del usuario.',
         severity: 'CRITICAL'
     },
     {

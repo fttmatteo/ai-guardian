@@ -24,9 +24,6 @@ function shouldAuditDocument(document: vscode.TextDocument): boolean {
         return false;
     }
 
-    if (!vscode.workspace.getWorkspaceFolder(document.uri)) {
-        return false;
-    }
 
     const language = document.languageId.toLowerCase();
     if (language === 'log' || language === 'output' || language === 'plaintext') {
@@ -51,6 +48,12 @@ export function activate(context: vscode.ExtensionContext) {
     const onboardingState = context.globalState;
     const usageStateKey = 'ai-guardian.llm.usageState';
     const telemetryStateKey = 'ai-guardian.metrics.localTelemetry';
+
+    context.subscriptions.push(vscode.workspace.onDidChangeWorkspaceFolders(() => {
+        Logger.log('Cambio en carpetas del workspace detectado. Recargando contexto y reglas...');
+        projectContextService.refreshContext();
+        localAuditor.loadRules();
+    }));
 
     type LocalTelemetryState = {
         totalAudits: number;

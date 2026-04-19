@@ -24,7 +24,7 @@ export class LocalRuleAuditor {
         this.loadRules();
     }
 
-    private loadRules() {
+    public loadRules() {
         // Siempre empezamos con las reglas integradas de "fabrica"
         this.rules = [...DEFAULT_RULES];
 

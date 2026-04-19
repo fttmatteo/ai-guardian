@@ -9,9 +9,7 @@ export function detectAiCodeInsertion(event: vscode.TextDocumentChangeEvent): st
     const numberOfAddedLines = addedLines.length - 1;
 
     if (numberOfAddedLines >= MIN_LINE_COUNT_FOR_IA && change.text.length >= MIN_CHAR_COUNT_FOR_IA) {
-      if (change.rangeLength === 0) {
-        return change.text;
-      }
+      return change.text;
     }
   }
 

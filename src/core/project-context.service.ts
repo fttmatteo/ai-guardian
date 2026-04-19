@@ -9,10 +9,10 @@ export class ProjectContextService {
     private context: ProjectContext = 'Unknown';
 
     constructor() {
-        this.determineContext();
+        this.refreshContext();
     }
 
-    private determineContext() {
+    public refreshContext() {
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (!workspaceFolders || workspaceFolders.length === 0) {
             this.context = 'Unknown';
@@ -44,7 +44,7 @@ export class ProjectContextService {
             }
         }
         
-        Logger.warn('Contexto de proyecto desconocido a partir de archivos del workspace.');
+        // El contexto desconocido es normal en archivos sueltos o carpetas sin config estandar.
         this.context = 'Unknown';
     }
 

@@ -37,7 +37,7 @@ files.forEach(file => {
 
   // Update Security Table (e.g. | v1.0.x | :white_check_mark: |)
   // We target the first row of the table after the header
-  const securityRegex = /\| (v?[\d.x<>]+) \| (✅|❌|:white_check_mark:|:x:) (?:Sí|S|Yes|No)?\s*\|/g;
+  const securityRegex = /\|\s*(v?[\d.x<>]+)\s*\|\s*(✅|❌|:white_check_mark:|:x:)\s*(?:Sí|S|Yes|No)?\s*\|/g;
   // We only want to replace the first occurrence (current version)
   let found = false;
   content = content.replace(securityRegex, (match, v, icon) => {

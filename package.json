@@ -3,10 +3,16 @@
   "displayName": "AI Guardian: Auditoría de Seguridad con IA",
   "description": "Un guardián de seguridad potenciado por IA para tu código.",
   "version": "1.4.0",
-  "private": true,
+  "publisher": "fttmatteo",
+  "private": false,
+  "icon": "docs/logo.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/fttmatteo/ai-guardian.git"
+  },
+  "galleryBanner": {
+    "color": "#0F172A",
+    "theme": "dark"
   },
   "license": "MIT",
   "engines": {
@@ -110,10 +116,6 @@
     },
     "commands": [
       {
-        "command": "ai-guardian.helloWorld",
-        "title": "Hello World"
-      },
-      {
         "command": "ai-guardian.configurarByok",
         "title": "AI Guardian: Configurar BYOK (Proveedor/API Key)"
       },
@@ -159,7 +161,7 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "@types/vscode": "^1.116.0",
+    "@types/vscode": "^1.85.0",
     "@vscode/test-cli": "^0.0.11",
     "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.3",

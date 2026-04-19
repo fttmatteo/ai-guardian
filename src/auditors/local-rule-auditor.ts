@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Rule, AuditResult } from '../types/audit';
 import { Logger } from '../core/logger';
+import { DEFAULT_RULES } from '../config/default-rules';
 
 function mapSeverityToRisk(severity: Rule['severity']): AuditResult['risk'] {
     switch (severity) {
@@ -24,10 +25,12 @@ export class LocalRuleAuditor {
     }
 
     private loadRules() {
+        // Siempre empezamos con las reglas integradas de "fabrica"
+        this.rules = [...DEFAULT_RULES];
+
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (!workspaceFolders || workspaceFolders.length === 0) {
-            Logger.warn('No hay workspace abierto. No se pueden cargar reglas desde rules.json.');
-            this.rules = [];
+            // Sin workspace, nos quedamos solo con las reglas por defecto
             return;
         }
 
@@ -35,8 +38,7 @@ export class LocalRuleAuditor {
         const workspaceRulesPath = path.join(workspaceRoot, 'rules.json');
 
         if (!fs.existsSync(workspaceRulesPath)) {
-            Logger.error('No se encontro rules.json en la raiz del proyecto. La auditoria local no tendra reglas activas.');
-            this.rules = [];
+            // No es un error ni advertencia; simplemente no hay reglas personalizadas
             return;
         }
 
@@ -45,16 +47,15 @@ export class LocalRuleAuditor {
             const parsedRules = JSON.parse(rulesContent) as Rule[];
 
             if (!Array.isArray(parsedRules)) {
-                Logger.error('rules.json debe contener un arreglo de reglas. La auditoria local no tendra reglas activas.');
-                this.rules = [];
+                Logger.error('rules.json debe contener un arreglo de reglas.');
                 return;
             }
 
-            this.rules = parsedRules;
-            Logger.log(`Se cargaron ${this.rules.length} reglas desde rules.json.`);
+            // Mezclamos las reglas del usuario con las de por defecto
+            this.rules = [...this.rules, ...parsedRules];
+            Logger.log(`Se cargaron ${parsedRules.length} reglas adicionales desde rules.json.`);
         } catch (error) {
-            Logger.error('Error al parsear rules.json. La auditoria local no tendra reglas activas.', error);
-            this.rules = [];
+            Logger.error('Error al parsear rules.json.', error);
         }
     }
 

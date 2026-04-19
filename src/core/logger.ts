@@ -13,7 +13,6 @@ export class Logger {
         if (Logger.outputChannel) {
             const timestamp = new Date().toLocaleTimeString();
             Logger.outputChannel.appendLine(`[INFO ${timestamp}] ${message}`);
-            Logger.outputChannel.show(true);
         }
     }
 

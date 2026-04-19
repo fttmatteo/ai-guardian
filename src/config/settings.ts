@@ -7,43 +7,8 @@ export type LlmProfile = 'free' | 'balanced' | 'deep';
 
 const MODEL_CATALOG = modelCatalogData as Record<LlmProvider, Record<LlmProfile, string[]>>;
 
-export function getGeminiApiKey(): string | undefined {
-  const config = vscode.workspace.getConfiguration('ai-guardian.gemini');
-  return config.get<string>('apiKey');
-}
-
-export function getOpenAiApiKey(): string | undefined {
-  const config = vscode.workspace.getConfiguration('ai-guardian.openai');
-  return config.get<string>('apiKey');
-}
-
-export function getClaudeApiKey(): string | undefined {
-  const config = vscode.workspace.getConfiguration('ai-guardian.claude');
-  return config.get<string>('apiKey');
-}
-
 export async function getLlmApiKey(): Promise<string | undefined> {
-  const storedApiKey = await getStoredLlmApiKey();
-  if (storedApiKey) {
-    return storedApiKey;
-  }
-
-  const provider = getLlmProvider();
-  const llmConfig = vscode.workspace.getConfiguration('ai-guardian.llm');
-  const genericApiKey = llmConfig.get<string>('apiKey');
-  if (genericApiKey && genericApiKey.trim().length > 0) {
-    return genericApiKey;
-  }
-
-  if (provider === 'openai') {
-    return getOpenAiApiKey();
-  }
-
-  if (provider === 'claude') {
-    return getClaudeApiKey();
-  }
-
-  return getGeminiApiKey();
+  return getStoredLlmApiKey();
 }
 
 export function getLlmProvider(): LlmProvider {
@@ -155,31 +120,6 @@ export async function setLlmModel(model: string): Promise<void> {
   await llmConfig.update('model', model, vscode.ConfigurationTarget.Global);
 }
 
-export async function migratePlaintextLlmApiKeyToSecretStorage(): Promise<boolean> {
-  const llmConfig = vscode.workspace.getConfiguration('ai-guardian.llm');
-  const plaintextApiKey = llmConfig.get<string>('apiKey', '');
-
-  if (!plaintextApiKey || plaintextApiKey.trim().length === 0) {
-    return false;
-  }
-
-  await setStoredLlmApiKey(plaintextApiKey.trim());
-  await llmConfig.update('apiKey', '', vscode.ConfigurationTarget.Global);
-  return true;
-}
-
 export async function clearAllLlmApiKeys(): Promise<void> {
   await deleteStoredLlmApiKey();
-
-  const llmConfig = vscode.workspace.getConfiguration('ai-guardian.llm');
-  await llmConfig.update('apiKey', '', vscode.ConfigurationTarget.Global);
-
-  const geminiConfig = vscode.workspace.getConfiguration('ai-guardian.gemini');
-  await geminiConfig.update('apiKey', '', vscode.ConfigurationTarget.Global);
-
-  const openAiConfig = vscode.workspace.getConfiguration('ai-guardian.openai');
-  await openAiConfig.update('apiKey', '', vscode.ConfigurationTarget.Global);
-
-  const claudeConfig = vscode.workspace.getConfiguration('ai-guardian.claude');
-  await claudeConfig.update('apiKey', '', vscode.ConfigurationTarget.Global);
 }

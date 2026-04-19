@@ -228,7 +228,7 @@ export class LlmAuditor {
         const apiKey = await getLlmApiKey();
 
         if (!apiKey) {
-            Logger.warn('No hay API key configurada para el proveedor LLM. Se omite la auditoria. Configura ai-guardian.llm.apiKey en ajustes (o claves legacy por proveedor).');
+            Logger.warn('No hay API key configurada en SecretStorage para el proveedor LLM. Se omite la auditoria. Ejecuta "AI Guardian: Configurar BYOK (Proveedor/API Key)".');
             return [];
         }
 

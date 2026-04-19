@@ -91,26 +91,6 @@
           "maximum": 50000,
           "description": "Maximo de caracteres enviados al proveedor LLM por auditoria."
         },
-        "ai-guardian.llm.apiKey": {
-          "type": "string",
-          "description": "API key del proveedor LLM (BYOK).",
-          "default": ""
-        },
-        "ai-guardian.gemini.apiKey": {
-          "type": "string",
-          "description": "[Compatibilidad] API key de Gemini. Usa ai-guardian.llm.apiKey para configuración agnóstica.",
-          "default": ""
-        },
-        "ai-guardian.openai.apiKey": {
-          "type": "string",
-          "description": "[Compatibilidad] API key de OpenAI. Usa ai-guardian.llm.apiKey para configuración agnóstica.",
-          "default": ""
-        },
-        "ai-guardian.claude.apiKey": {
-          "type": "string",
-          "description": "[Compatibilidad] API key de Claude/Anthropic. Usa ai-guardian.llm.apiKey para configuración agnóstica.",
-          "default": ""
-        },
         "ai-guardian.notifications.shadowMode": {
           "type": "boolean",
           "description": "If enabled, only high risks interrupt with popup notifications. Medium/low risks stay in diagnostics and output logs.",

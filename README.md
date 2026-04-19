@@ -92,7 +92,6 @@ Si un límite se excede, AI Guardian mantiene fallback local para no cortar el f
 ## Privacidad y seguridad
 
 - API keys BYOK almacenadas en `SecretStorage` de VS Code.
-- Migración automática desde key legacy en texto plano hacia almacenamiento seguro.
 - No se exponen API keys en logs de la extensión.
 
 ## Integración JaCoCo (Java)

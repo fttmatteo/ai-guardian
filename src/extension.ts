@@ -7,7 +7,7 @@ import { DiagnosticProvider } from './providers/diagnostic-provider';
 import { JacocoService } from './integrations/jacoco.service';
 import { AuditResult } from './types/audit';
 import { Logger } from './core/logger';
-import { clearAllLlmApiKeys, getLlmApiKey, getLlmBaseUrl, getLlmMaxAuditsPerFilePerHour, getLlmMaxCallsPerHour, getLlmMaxPromptChars, getLlmMaxRetries, getLlmModel, getLlmProfile, getLlmProvider, getLlmTimeoutMs, getRecommendedModels, isLocalTelemetryEnabled, isShadowModeEnabled, LlmProfile, LlmProvider, migratePlaintextLlmApiKeyToSecretStorage, setLlmApiKey, setLlmModel, setLlmProfile, setLlmProvider } from './config/settings';
+import { clearAllLlmApiKeys, getLlmApiKey, getLlmBaseUrl, getLlmMaxAuditsPerFilePerHour, getLlmMaxCallsPerHour, getLlmMaxPromptChars, getLlmMaxRetries, getLlmModel, getLlmProfile, getLlmProvider, getLlmTimeoutMs, getRecommendedModels, isLocalTelemetryEnabled, isShadowModeEnabled, LlmProfile, LlmProvider, setLlmApiKey, setLlmModel, setLlmProfile, setLlmProvider } from './config/settings';
 import { initializeSecretStorage } from './core/secret-storage';
 import { LlmUsageGuard, LlmUsageState } from './core/llm-usage-guard';
 
@@ -93,14 +93,6 @@ export function activate(context: vscode.ExtensionContext) {
     };
 
     llmUsageGuard.hydrate(onboardingState.get<LlmUsageState>(usageStateKey));
-
-    void migratePlaintextLlmApiKeyToSecretStorage().then(migrated => {
-        if (migrated) {
-            Logger.log('Se migro la API key BYOK de settings a almacenamiento seguro local.');
-        }
-    }).catch(error => {
-        Logger.error('Error al migrar API key BYOK a almacenamiento seguro.', error);
-    });
 
     const configurarByokCommand = vscode.commands.registerCommand('ai-guardian.configurarByok', async () => {
         const currentProvider = getLlmProvider();
@@ -214,7 +206,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     const limpiarByokCommand = vscode.commands.registerCommand('ai-guardian.limpiarByok', async () => {
         const confirmation = await vscode.window.showWarningMessage(
-            'Se eliminaran todas las API keys BYOK guardadas (seguras y legacy).',
+            'Se eliminaran todas las API keys BYOK guardadas en SecretStorage.',
             { modal: true },
             'Eliminar',
             'Cancelar'

@@ -155,6 +155,11 @@
     "release:major": "standard-version --release-as major",
     "version": "npm run docs:sync-version && git add *.md"
   },
+  "standard-version": {
+    "scripts": {
+      "posttag": "git push --follow-tags origin main"
+    }
+  },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",

@@ -27,15 +27,14 @@ files.forEach(file => {
   let content = fs.readFileSync(filePath, 'utf8');
 
   // Update Badge (shields.io)
-  // Pattern: Version-1.0.0-blue
-  const badgeRegex = /img\.shields\.io\/badge\/(?:Versi[óon]|Version)-[\d.]+-blue\.svg/g;
+  // Pattern: Version-1.0.0-blue or Versión-1.0.0-blue
+  const badgeRegex = /img\.shields\.io\/badge\/(?:Versi[óo]n|Version)-[\d.]+-blue\.svg/g;
   const newBadgeName = file.includes('.en') ? 'Version' : 'Versión';
   const newBadge = `img.shields.io/badge/${newBadgeName}-${version}-blue.svg`;
   content = content.replace(badgeRegex, newBadge);
 
-  // Update Security Table (e.g. | 1.0.x | ✅ Sí |)
-  // We target the first row of the table after the header
-  const securityRegex = /\| ([\d.x<>]+) \| (✅|❌) (?:Sí|S|Yes|No) \|/g;
+  // Update Security Table (e.g. | v1.0.x | :white_check_mark: |)
+  const securityRegex = /\| (v?[\d.x<>]+) \| (✅|❌|:white_check_mark:|:x:) \|/g;
   // We only want to replace the first occurrence (current version)
   let found = false;
   content = content.replace(securityRegex, (match, v, icon) => {

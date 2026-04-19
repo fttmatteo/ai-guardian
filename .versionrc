@@ -1,0 +1,31 @@
+{
+  "scripts": {
+    "posttag": "git push --follow-tags origin main"
+  },
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    },
+    {
+      "filename": "package-lock.json",
+      "type": "json"
+    },
+    {
+      "filename": "README.md",
+      "updater": "./scripts/md-updater.cjs"
+    },
+    {
+      "filename": "README.en.md",
+      "updater": "./scripts/md-updater.cjs"
+    },
+    {
+      "filename": "SECURITY.md",
+      "updater": "./scripts/md-updater.cjs"
+    },
+    {
+      "filename": "SECURITY.en.md",
+      "updater": "./scripts/md-updater.cjs"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "name": "ai-guardian",
   "displayName": "AI Guardian: Auditoría de Seguridad con IA",
   "description": "Un guardián de seguridad potenciado por IA para tu código.",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "private": true,
   "repository": {
     "type": "git",
@@ -155,19 +155,6 @@
     "release:minor": "standard-version --release-as minor",
     "release:major": "standard-version --release-as major",
     "version": "npm run docs:sync-version"
-  },
-  "standard-version": {
-    "scripts": {
-      "posttag": "git push --follow-tags origin main"
-    },
-    "bumpFiles": [
-      "package.json",
-      "package-lock.json",
-      "README.md",
-      "README.en.md",
-      "SECURITY.md",
-      "SECURITY.en.md"
-    ]
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",

@@ -174,7 +174,7 @@ export function activate(context: vscode.ExtensionContext) {
         if (pickedModel.value === '__custom__') {
             const customModel = await vscode.window.showInputBox({
                 prompt: 'Ingresa el nombre exacto del modelo',
-                placeHolder: 'Ejemplo: gpt-4.1-mini',
+                placeHolder: 'Ejemplo: nombre-del-modelo',
                 ignoreFocusOut: true,
                 validateInput: value => (!value || value.trim().length < 3 ? 'Ingresa un nombre de modelo valido.' : null)
             });

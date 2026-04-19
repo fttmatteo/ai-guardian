@@ -1,57 +1,51 @@
 # AI Guardian
 
-AI Guardian es una extensión de VS Code enfocada en seguridad para código generado por IA.
-En lugar de acelerar generación de código, prioriza la validación de riesgos para reducir deuda técnica y fallos de seguridad.
+AI Guardian es una extensión de VS Code orientada a auditoría de seguridad para código generado o asistido por IA.
+Su objetivo es reducir riesgo técnico y de seguridad durante la edición, manteniendo un flujo de trabajo práctico para equipos de desarrollo.
 
-## Características principales
+## Estado actual del proyecto
 
-- Detección de inserciones grandes de código (flujo típico de herramientas IA).
-- Auditoría local con reglas (`rules.json`) para patrones de riesgo frecuentes.
-- Auditoría LLM con enfoque BYOK (Bring Your Own Key).
-- Soporte multi-proveedor LLM: `gemini`, `openai`, `claude`.
-- Integración de cobertura JaCoCo para alertar huecos de testing en Java.
-- Modo sombra para reducir fatiga de alertas (solo interrumpe por riesgo alto).
+Este repositorio está en estado funcional y listo para uso en desarrollo:
 
-## Instalación y ejecución (desarrollo)
+- Auditoría híbrida local + LLM operativa.
+- Flujo BYOK multi proveedor operativo.
+- Guardrails de costo/cuota activos.
+- Integración básica con cobertura JaCoCo para Java.
+- Automatización CI para cambios de nombres de modelos en proveedores externos.
 
-1. Instalar dependencias:
+## Alcance funcional para usuario final
 
-```bash
-npm install
-```
+### Capacidades principales
 
-2. Compilar:
+- Detección de inserciones grandes de código (heurística para bloques típicos de generación IA).
+- Reglas locales de seguridad por patrón (archivo `rules.json`).
+- Auditoría semántica por LLM con BYOK.
+- Diagnósticos en editor y notificaciones por severidad.
+- Modo sombra para reducir interrupciones por hallazgos de riesgo bajo/medio.
+- Panel visual de estado de cuota y consumo.
 
-```bash
-npm run compile
-```
+### Lenguajes soportados en auditoría activa
 
-3. Lanzar en modo desarrollo:
+- `java`
+- `javascript`
+- `typescript`
+- `javascriptreact`
+- `typescriptreact`
 
-- Presiona `F5` en VS Code.
+### Contexto de proyecto detectado
 
-## Configuración BYOK
+- Spring Boot
+- Java
+- React
+- Unknown (fallback)
 
-### Flujo recomendado (UI)
+## BYOK y configuración operativa
 
-1. Abre la paleta de comandos.
-2. Ejecuta `AI Guardian: Configurar BYOK (Proveedor/API Key)`.
-3. Selecciona proveedor, perfil (`free`, `balanced`, `deep`) y modelo sugerido.
-4. Agrega tu API key.
+### Proveedores soportados
 
-### Perfiles de uso LLM
-
-- `free`: optimiza costo/cuota; recomendado para uso diario con límites conservadores.
-- `balanced`: equilibrio entre costo y profundidad de análisis.
-- `deep`: más profundidad de análisis, mayor consumo de cuota.
-
-AI Guardian permite definir guardrails para evitar consumo inesperado de cuota:
-
-- Límite global de llamadas LLM por hora.
-- Límite de auditorías LLM por archivo por hora.
-- Límite máximo de caracteres por prompt enviado al proveedor.
-
-Cuando se supera un límite, AI Guardian continúa con auditoría local (fallback), sin interrumpir tu flujo.
+- `gemini`
+- `openai`
+- `claude`
 
 ### Comandos disponibles
 
@@ -59,6 +53,27 @@ Cuando se supera un límite, AI Guardian continúa con auditoría local (fallbac
 - `AI Guardian: Ver estado BYOK`
 - `AI Guardian: Ver estado de cuota (panel)`
 - `AI Guardian: Limpiar API Keys BYOK`
+
+### Flujo recomendado de configuración
+
+1. Abrir paleta de comandos.
+2. Ejecutar `AI Guardian: Configurar BYOK (Proveedor/API Key)`.
+3. Elegir proveedor, perfil y modelo sugerido.
+4. Guardar API key.
+
+### Perfiles de uso LLM
+
+- `free`: menor costo/cuota.
+- `balanced`: equilibrio costo-calidad.
+- `deep`: mayor profundidad de análisis.
+
+### Guardrails de consumo
+
+- Límite global de llamadas LLM por hora.
+- Límite de auditorías LLM por archivo por hora.
+- Límite de tamaño de prompt por auditoría.
+
+Si un límite se excede, AI Guardian mantiene fallback local para no cortar el flujo de trabajo.
 
 ### Settings relevantes
 
@@ -76,63 +91,89 @@ Cuando se supera un límite, AI Guardian continúa con auditoría local (fallbac
 
 ## Privacidad y seguridad
 
-- La API key BYOK se guarda en `SecretStorage` de VS Code (local y seguro).
-- Si se detecta una key legacy en texto plano, se migra automáticamente al almacenamiento seguro.
-- AI Guardian no expone la API key en logs.
+- API keys BYOK almacenadas en `SecretStorage` de VS Code.
+- Migración automática desde key legacy en texto plano hacia almacenamiento seguro.
+- No se exponen API keys en logs de la extensión.
+
+## Integración JaCoCo (Java)
+
+AI Guardian intenta leer reporte de cobertura en:
+
+- `target/site/jacoco/jacoco.xml`
+
+La integración es best-effort y prioriza alertar métodos sin cobertura en escenarios comunes de proyecto Java.
 
 ## Reglas locales
 
-Puedes definir reglas personalizadas en la raíz del proyecto:
+`rules.json` en la raíz del proyecto es la fuente única y centralizada de reglas locales de auditoría.
+
+Ejemplo:
 
 ```json
 [
-	{
-		"id": "java-raw-sql",
-		"language": "java",
-		"pattern": "\\.execute(?:Update|Query)?\\s*\\(\\s*['\\\"]\\s*(SELECT|INSERT|UPDATE|DELETE)",
-		"message": "SQL crudo detectado.",
-		"severity": "HIGH"
-	}
+  {
+    "id": "java-raw-sql",
+    "language": "java",
+    "pattern": "\\.execute(?:Update|Query)?\\s*\\(\\s*['\\\"]\\s*(SELECT|INSERT|UPDATE|DELETE)",
+    "message": "SQL crudo detectado.",
+    "severity": "HIGH"
+  }
 ]
 ```
 
+## Instalación y ejecución en desarrollo
+
+1. Instalar dependencias.
+
+```bash
+npm install
+```
+
+2. Compilar extensión.
+
+```bash
+npm run compile
+```
+
+3. Ejecutar en modo extensión de desarrollo (VS Code): `F5`.
+
 ## Pruebas
 
-- Compilación de tests:
+- Compilar tests:
 
 ```bash
 npm run compile-tests
 ```
 
-- Suite completa:
+- Suite de extensión (host de VS Code):
 
 ```bash
 npm test
 ```
 
-- Fallback para CI/local (sin host de VS Code):
+- Fallback CI/local (sin host de VS Code):
 
 ```bash
 npm run test:ci
 ```
 
-## Limitaciones actuales
+## CI de gobernanza de modelos (proveedores externos)
 
-- La precisión depende del proveedor/modelo LLM configurado.
-- La detección de inserciones IA se basa en heurísticas de tamaño/velocidad.
-- La integración JaCoCo es funcional para casos comunes, pero puede requerir ajustes en estructuras de proyecto no estándar.
+Para cambios de nombres/availability de modelos en proveedores:
 
-## CI para cambios de modelos en proveedores
+- Workflow de sincronización automática: `.github/workflows/provider-model-watch.yml`
+- Workflow de validación en PR: `.github/workflows/provider-model-validate.yml`
 
-Si cambian los nombres de modelos en OpenAI, Gemini o Anthropic, puedes mantener la extensión alineada automáticamente:
+Archivos de configuración involucrados:
 
-- Workflow: `.github/workflows/provider-model-watch.yml`
-- Frecuencia: diario + ejecución manual (`workflow_dispatch`).
-- Acción: consulta catálogos reales de proveedores y sincroniza `src/config/model-catalog.json`.
-- Preferencias de reemplazo automático: `src/config/model-replacement-preferences.json`.
-- Resultado: crea PR automático cuando detecta cambios.
-- Validación en PR: `.github/workflows/provider-model-validate.yml`.
-- Resultado en PR: falla si hay modelos del catálogo local que ya no existen en proveedores.
+- Catálogo operativo: `src/config/model-catalog.json`
+- Preferencias de reemplazo: `src/config/model-replacement-preferences.json`
+
+Comportamiento actual del pipeline:
+
+- Sincroniza catálogo con APIs de proveedores.
+- Poda preferencias obsoletas de manera segura.
+- Falla validación cuando hay modelos faltantes o ambigüedad en preferencias.
 
 ### Secrets requeridos en GitHub
 
@@ -140,7 +181,7 @@ Si cambian los nombres de modelos en OpenAI, Gemini o Anthropic, puedes mantener
 - `GEMINI_API_KEY`
 - `ANTHROPIC_API_KEY`
 
-### Scripts útiles
+### Scripts de operación
 
 ```bash
 npm run models:watch
@@ -148,19 +189,27 @@ npm run models:sync
 npm run models:validate
 ```
 
-`models:watch` valida contra proveedores y falla si hay modelos faltantes.
+## Limitaciones conocidas
 
-`models:sync` sincroniza el catálogo, poda preferencias obsoletas de forma segura y genera `model-watch-report.json`.
+- La calidad de hallazgos LLM depende del proveedor, modelo y prompt.
+- La detección de inserciones IA es heurística, no forense.
+- La integración JaCoCo puede requerir ajustes en estructuras de build no estándar.
+- El alcance actual de lenguajes está acotado al conjunto declarado en la extensión.
 
-`models:validate` exige API keys de proveedores, falla con modelos faltantes y también falla ante ambigüedades en preferencias.
+## Estructura del repositorio
 
-## Contribuir
+- `src/`: código fuente de la extensión.
+- `scripts/`: utilidades operativas y automatización de modelos.
+- `.github/workflows/`: CI/CD y validaciones automáticas.
+- `.vscode/`: tareas y launch de desarrollo compartibles.
+
+## Contribución
 
 Contribuciones son bienvenidas.
 
-- Reporta bugs y sugerencias en issues.
-- Propón reglas nuevas en `rules.json`.
-- Aporta tests de regresión al modificar heurísticas o auditoría.
+- Reportar bugs o propuestas en issues.
+- Aportar reglas de seguridad y casos de prueba.
+- Incluir pruebas de regresión para cambios de heurística o auditoría.
 
 ## Licencia
 

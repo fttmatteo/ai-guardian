@@ -49,8 +49,8 @@
         },
         "ai-guardian.llm.model": {
           "type": "string",
-          "default": "gemini-flash-latest",
-          "description": "Modelo LLM a usar para auditoría (según proveedor)."
+          "default": "",
+          "description": "Modelo LLM a usar para auditoría (según proveedor). Si está vacío, AI Guardian usa el recomendado según catálogo y perfil."
         },
         "ai-guardian.llm.baseUrl": {
           "type": "string",

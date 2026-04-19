@@ -1,6 +1,14 @@
 # Registro de Cambios
 
 Todos los cambios notables en este proyecto serán documentados en este archivo.
+## [1.3.0](https://github.com/fttmatteo/ai-guardian/compare/v1.2.0...v1.3.0) (2026-04-19)
+
+
+### Maintenance
+
+* bump version to 1.2.0 and add posttag hook to standard-version configuration ([0646e62](https://github.com/fttmatteo/ai-guardian/commit/0646e627830c54354540cfd18800b2f346e8078d))
+* configure standard-version to automatically push tags to origin main ([4b3c734](https://github.com/fttmatteo/ai-guardian/commit/4b3c734073a070c47c0e4d31aee70da0390799c4))
+
 ## [1.2.0](https://github.com/fttmatteo/ai-guardian/compare/v1.1.0...v1.2.0) (2026-04-19)
 
 

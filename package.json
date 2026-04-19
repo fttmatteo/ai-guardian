@@ -2,7 +2,7 @@
   "name": "ai-guardian",
   "displayName": "AI Guardian: Auditoría de Seguridad con IA",
   "description": "Un guardián de seguridad potenciado por IA para tu código.",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "private": true,
   "repository": {
     "type": "git",

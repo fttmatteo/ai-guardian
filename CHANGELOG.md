@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/fttmatteo/ai-guardian/compare/v1.4.6...v1.5.0) (2026-04-20)
+
+
+### Features
+
+* implement AI quick fixes and severe performance optimizations ([43d2672](https://github.com/fttmatteo/ai-guardian/commit/43d2672a3ab9571e3d0c645bd951c504877b376c))
+* implement LLM-based code auditing service with multi-provider support and retry logic ([262b272](https://github.com/fttmatteo/ai-guardian/commit/262b272639d73261322d8ca78985f92142416406))
+
 ### [1.4.6](https://github.com/fttmatteo/ai-guardian/compare/v1.4.5...v1.4.6) (2026-04-19)
 
 

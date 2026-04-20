@@ -12,6 +12,8 @@ function mapRiskToSeverity(risk: AuditResult['risk']): vscode.DiagnosticSeverity
     }
 }
 
+export const codeReplacementMap = new WeakMap<vscode.Diagnostic, string>();
+
 export class DiagnosticProvider {
     private diagnosticCollection: vscode.DiagnosticCollection;
 
@@ -38,6 +40,11 @@ export class DiagnosticProvider {
                 mapRiskToSeverity(result.risk)
             );
             diagnostic.source = 'AI Guardian';
+            
+            if (result.codeReplacement) {
+                codeReplacementMap.set(diagnostic, result.codeReplacement);
+            }
+            
             return diagnostic;
         });
 

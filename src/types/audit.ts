@@ -2,7 +2,8 @@ export interface AuditResult {
   risk: 'alto' | 'medio' | 'bajo';
   reason: string;
   fixSuggestion: string;
-  line?: number; // 0-indexed line number for precise highlighting
+  codeReplacement?: string;
+  line?: number;
 }
 
 export interface Rule {

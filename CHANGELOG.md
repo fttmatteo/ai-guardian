@@ -4,8 +4,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [1.4.6](https://github.com/fttmatteo/ai-guardian/compare/v1.4.5...v1.4.6) (2026-04-19)
 
-### [1.4.5](https://github.com/fttmatteo/ai-guardian/compare/v1.4.4...v1.4.5) (2026-04-19)
-
 
 ### Features
 
@@ -33,6 +31,7 @@ All notable changes to this project will be documented in this file. See [standa
 * initialize extension core with BYOK configuration, usage tracking, and audit services ([15e5e83](https://github.com/fttmatteo/ai-guardian/commit/15e5e8381391d4421a973efb5c76d759a2c9698a))
 
 ### [1.4.1](https://github.com/fttmatteo/ai-guardian/compare/v1.4.0...v1.4.1) (2026-04-19)
+
 
 ### Features
 

@@ -21,7 +21,8 @@ Formato de respuesta:
   {
     "risk": "alto" | "medio" | "bajo",
     "reason": "Una explicacion concisa y tecnica del problema.",
-    "fixSuggestion": "Una recomendacion clara y accionable para corregir el fallo."
+    "fixSuggestion": "Una recomendacion clara y accionable para corregir el fallo.",
+    "codeReplacement": "El fragmento exacto de codigo seguro que debe reemplazar al bloque original detectado, listo para insertarse."
   }
 ]
 \`\`\`

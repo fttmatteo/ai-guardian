@@ -10,6 +10,7 @@ import { Logger } from './core/logger';
 import { clearAllLlmApiKeys, getLlmApiKey, getLlmBaseUrl, getLlmMaxAuditsPerFilePerHour, getLlmMaxCallsPerHour, getLlmMaxPromptChars, getLlmMaxRetries, getLlmModel, getLlmProfile, getLlmProvider, getLlmTimeoutMs, getRecommendedModels, isLocalTelemetryEnabled, isShadowModeEnabled, LlmProfile, LlmProvider, setLlmApiKey, setLlmModel, setLlmProfile, setLlmProvider } from './config/settings';
 import { initializeSecretStorage } from './core/secret-storage';
 import { LlmUsageGuard, LlmUsageState } from './core/llm-usage-guard';
+import { SecurityActionProvider } from './providers/code-action-provider';
 
 const SUPPORTED_LANGUAGES = new Set([
     'java',
@@ -55,6 +56,15 @@ export function activate(context: vscode.ExtensionContext) {
         projectContextService.refreshContext();
         localAuditor.loadRules();
     }));
+
+    const codeActionProvider = new SecurityActionProvider();
+    context.subscriptions.push(
+        vscode.languages.registerCodeActionsProvider(
+            Array.from(SUPPORTED_LANGUAGES),
+            codeActionProvider,
+            { providedCodeActionKinds: SecurityActionProvider.providedCodeActionKinds }
+        )
+    );
 
     type LocalTelemetryState = {
         totalAudits: number;
@@ -340,16 +350,16 @@ export function activate(context: vscode.ExtensionContext) {
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>AI Guardian - Estado de cuota</title>
                 <style>
-                    body { font-family: Verdana, sans-serif; padding: 16px; color: #222; }
-                    h1 { margin-top: 0; font-size: 20px; }
-                    h2 { margin-bottom: 8px; font-size: 16px; }
-                    .card { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+                    body { font-family: var(--vscode-font-family), Verdana, sans-serif; padding: 16px; color: var(--vscode-editor-foreground); background-color: var(--vscode-editor-background); }
+                    h1 { margin-top: 0; font-size: 20px; color: var(--vscode-editor-foreground); }
+                    h2 { margin-bottom: 8px; font-size: 16px; color: var(--vscode-editor-foreground); }
+                    .card { border: 1px solid var(--vscode-panel-border); border-radius: 8px; padding: 12px; margin-bottom: 12px; background-color: var(--vscode-sideBar-background); }
                     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
                     ul { margin: 0; padding-left: 18px; }
                     table { width: 100%; border-collapse: collapse; }
-                    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                    th { background: #f4f4f4; }
-                    .muted { color: #666; font-size: 12px; }
+                    th, td { border: 1px solid var(--vscode-panel-border); padding: 8px; text-align: left; }
+                    th { background-color: var(--vscode-editorWidget-background); }
+                    .muted { color: var(--vscode-descriptionForeground); font-size: 12px; }
                 </style>
             </head>
             <body>
@@ -444,10 +454,8 @@ export function activate(context: vscode.ExtensionContext) {
 
             Logger.log(`Iniciando auditoria (${isInsertion ? 'Insercion' : 'Archivo'}). Lenguaje: ${languageId}, Contexto: ${projectContext}.`);
             
-            // 1. Auditoria Local (Siempre sobre lo que queremos auditar)
             const localFindings = await localAuditor.audit(codeToAudit, languageId);
             
-            // 2. Auditoria LLM (Solo si es una insercion detectada, para optimizar cuota)
             let llmFindings: AuditResult[] = [];
             if (isInsertion) {
                 const maxPromptChars = getLlmMaxPromptChars();
@@ -491,7 +499,6 @@ export function activate(context: vscode.ExtensionContext) {
         });
     };
 
-    // Comando Manual
     const auditManualCommand = vscode.commands.registerCommand('ai-guardian.auditManual', async () => {
         const editor = vscode.window.activeTextEditor;
         if (editor) {

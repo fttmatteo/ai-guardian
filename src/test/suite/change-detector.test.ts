@@ -37,4 +37,25 @@ suite('Change Detector', () => {
         const result = detectAiCodeInsertion(fakeEvent);
         assert.strictEqual(result, undefined);
     });
+
+    test('procesa instantaneamente sin OOM para texturas masivas', () => {
+        const giantTextBase = 'a'.repeat(50) + '\n';
+        const giantText = giantTextBase.repeat(10000); 
+
+        const fakeEvent = {
+            contentChanges: [
+                {
+                    text: giantText,
+                    rangeLength: 0
+                }
+            ]
+        } as any;
+
+        const startTime = Date.now();
+        const result = detectAiCodeInsertion(fakeEvent);
+        const duration = Date.now() - startTime;
+
+        assert.ok(result);
+        assert.ok(duration < 50, `Demoró demasiado (${duration}ms) contando saltos de línea.`);
+    });
 });

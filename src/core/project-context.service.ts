@@ -9,10 +9,10 @@ export class ProjectContextService {
     private context: ProjectContext = 'Unknown';
 
     constructor() {
-        this.refreshContext();
+        void this.refreshContext();
     }
 
-    public refreshContext() {
+    public async refreshContext(): Promise<void> {
         const workspaceFolders = vscode.workspace.workspaceFolders;
         if (!workspaceFolders || workspaceFolders.length === 0) {
             this.context = 'Unknown';
@@ -22,11 +22,15 @@ export class ProjectContextService {
 
         const pomPath = path.join(workspaceRoot, 'pom.xml');
         if (fs.existsSync(pomPath)) {
-            const content = fs.readFileSync(pomPath, 'utf-8');
-            if (content.includes('spring-boot-starter')) {
-                this.context = 'SpringBoot';
-                Logger.log('Contexto Spring Boot detectado.');
-                return;
+            try {
+                const content = await fs.promises.readFile(pomPath, 'utf-8');
+                if (content.includes('spring-boot-starter')) {
+                    this.context = 'SpringBoot';
+                    Logger.log('Contexto Spring Boot detectado.');
+                    return;
+                }
+            } catch (e) {
+                Logger.error('Error asincrónico leyendo pom.xml', e);
             }
 
             this.context = 'Java';
@@ -36,13 +40,18 @@ export class ProjectContextService {
 
         const packageJsonPath = path.join(workspaceRoot, 'package.json');
         if (fs.existsSync(packageJsonPath)) {
-            const content = fs.readFileSync(packageJsonPath, 'utf-8');
-            if (content.includes('"react"')) {
-                this.context = 'React';
-                Logger.log('Contexto React detectado.');
-                return;
+            try {
+                const content = await fs.promises.readFile(packageJsonPath, 'utf-8');
+                if (content.includes('"react"')) {
+                    this.context = 'React';
+                    Logger.log('Contexto React detectado.');
+                    return;
+                }
+            } catch (e) {
+                Logger.error('Error asincrónico leyendo package.json', e);
             }
         }
+        
         const pythonFiles = ['requirements.txt', 'pyproject.toml', 'setup.py', 'environment.yml'];
         for (const file of pythonFiles) {
             const filePath = path.join(workspaceRoot, file);
@@ -53,7 +62,6 @@ export class ProjectContextService {
             }
         }
         
-        // El contexto desconocido es normal en archivos sueltos o carpetas sin config estandar.
         this.context = 'Unknown';
     }
 

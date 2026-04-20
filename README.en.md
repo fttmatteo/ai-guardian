@@ -25,10 +25,12 @@ AI Guardian is a VS Code extension designed to audit your code's security, espec
 ### Features
 
 - **Industrial Auditing (OWASP)**: Detects SQL Injections, Path Traversal, SSRF, and Weak Cryptography aligned with OWASP Top 10 standards.
+- **Auto-Correction (Quick Fixes)**: We don't just detect, we fix! Click the yellow lightbulb (`Ctrl + .`) over a vulnerability and the AI will inject the secure code to solve it instantly.
 - **Total Proactivity**: The Guardian automatically scans upon opening files, saving, or detecting code insertions. You don't have to configure anything.
+- **Ultra-Lightweight & Optimized**: Built with high-performance engineering standards. Readings are asynchronous and internal memory management guarantees that VS Code never freezes, even on monstrous files or giant projects.
 - **Multilingual Support**: Native protection for **Java, Python, JavaScript, TypeScript, and React**.
 - **Intelligent Hybrid Auditing**: Combines the speed of local rules with the semantic depth of LLMs under the **BYOK (Bring Your Own Key)** model.
-- **Guaranteed Privacy**: Your API Keys are securely stored on your system, and your data only travels to the provider you choose (Gemini, OpenAI, or Claude).
+- **Guaranteed Privacy**: Your API Keys are securely stored in your Operating System's internal vault (Credential Manager/Keychain) safely unexposed. Your data only travels to the provider you choose via end-to-end encryption (Gemini, OpenAI, or Claude).
 
 ## Quick Start in 3 Steps
 
@@ -65,12 +67,38 @@ If you want to clone this repo and work on it:
 3. `F5` - Launches a VS Code instance with the extension loaded.
 
 ### Project Structure
-- `src/core/`: Detection engines and base services.
-- `src/auditors/`: Local and LLM analysis logic.
+- `src/core/`: Detection engines, asynchronous services, and memory management.
+- `src/auditors/`: Local analysis logic (Cached RegEx) and LLM engine.
 - `src/config/`: Default rules and configuration.
+- `src/providers/`: Visual integration engines (Diagnostics and Quick Fix Actions via `WeakMap`).
 
-### Adding Local Rules
-You can extend security by adding a `rules.json` file at the root of your project with the `Rule` object format.
+### Performance Architecture (Devs)
+AI Guardian is designed to never block the Extension Host's Main Thread:
+- Uses **delegated asynchronous reads (`fs.promises`)** for Workspace context determination.
+- Applies **WeakMaps** to link solutions to visual diagnostics, forcing temporary memory release (Garbage Collection) when closing files and preventing OOM memory leaks.
+- Regular expressions are **pre-compiled only once**; the inserted block count uses atomic `match()` evaluation to avoid recreating massive buffers.
+
+### Adding Custom Local Rules
+If you want the Guardian to detect vulnerabilities specific to your enterprise security team, create a `rules.json` file directly at the root of your project Workspace.
+
+The file format must be an Array of Rules (`Array<Rule>`), for example:
+```json
+[
+  {
+    "id": "no-hardcoded-passwords",
+    "language": "any", 
+    "pattern": "(password|clave|secret)\\s*=\\s*['\\\"][a-zA-Z0-9]+['\\\"]",
+    "message": "Detected possible credential hardcoding in source code.",
+    "severity": "HIGH"
+  }
+]
+```
+**Required Parameters:**
+- `id`: A unique name that identifies your custom rule.
+- `language`: The language to inspect (e.g., `java`, `python`, `javascriptreact`, or `any` to audit all).
+- `pattern`: The robust Regular Expression (Regex) to capture the exact error text.
+- `message`: The alert developers will see when the rule is broken.
+- `severity`: Error gravity status: `CRITICAL`, `HIGH`, `MEDIUM` or `LOW`.
 
 ### Running Tests
 To ensure the Guardian's stability:

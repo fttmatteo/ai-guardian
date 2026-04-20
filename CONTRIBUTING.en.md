@@ -46,11 +46,12 @@ AI Guardian emphasizes reliability. Please ensure your changes pass all tests be
   npm run test:unit
   ```
 
-## Coding Standards
+## Coding Standards and Performance
 
 - Use **TypeScript** for all extension logic.
 - Follow the existing formatting (ESLint is configured).
 - Write descriptive commit messages following [Conventional Commits](https://www.conventionalcommits.org/).
+- **Performance:** Avoid using synchronous file system APIs completely (`fs.readFileSync`). Always use asynchronous wrappers (`fs.promises`) to avoid freezing the VS Code UI. Regular expressions must be pre-compiled and cached.
 - Ensure new features have corresponding unit or integration tests.
 
 ## Pull Request Process

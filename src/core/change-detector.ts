@@ -5,10 +5,13 @@ const MIN_CHAR_COUNT_FOR_IA = 200;
 
 export function detectAiCodeInsertion(event: vscode.TextDocumentChangeEvent): string | undefined {
   for (const change of event.contentChanges) {
-    const addedLines = change.text.split('\n');
-    const numberOfAddedLines = addedLines.length - 1;
+    if (change.text.length < MIN_CHAR_COUNT_FOR_IA) {
+      continue;
+    }
 
-    if (numberOfAddedLines >= MIN_LINE_COUNT_FOR_IA && change.text.length >= MIN_CHAR_COUNT_FOR_IA) {
+    const numberOfAddedLines = (change.text.match(/\n/g) || []).length;
+
+    if (numberOfAddedLines >= MIN_LINE_COUNT_FOR_IA) {
       return change.text;
     }
   }

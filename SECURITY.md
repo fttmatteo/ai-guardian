@@ -18,6 +18,7 @@ Dado que AI Guardian opera bajo un modelo **Bring Your Own Key** (Trae tu propia
 1. **Almacenamiento Seguro**: AI Guardian utiliza el `SecretStorage` de VS Code para cifrar y guardar tus llaves. Nunca compartas tus configuraciones de `.vscode` con las llaves expuestas.
 2. **Rotación de Llaves**: Recomendamos rotar tus API keys periódicamente.
 3. **Límites de Uso**: Configura siempre alertas de presupuesto en el panel de tu proveedor (Google AI Studio, OpenAI, Anthropic).
+4. **Revisión de Parches ("Quick Fixes")**: AI Guardian emite correcciones de código asistidas por IA. Dado que los LLMs pueden "alucinar", debes revisar **siempre** el código propuesto antes de hacer el commit final. El uso de las auto-correcciones es responsabilidad del desarrollador.
 
 ## Detectar una Vulnerabilidad
 

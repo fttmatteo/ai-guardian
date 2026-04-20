@@ -25,10 +25,12 @@ AI Guardian es una extensión de VS Code diseñada para auditar la seguridad de 
 ### Características
 
 - **Auditoría Industrial (OWASP)**: Detecta Inyecciones SQL, Path Traversal, SSRF y Criptografía Débil alineado con los estándares del OWASP Top 10.
+- **Auto-Corrección (Quick Fixes)**: ¡No solo detectamos, también reparamos! Haz clic en el bombillo amarillo (`Ctrl + .`) sobre una vulnerabilidad y la IA inyectará el código seguro para solucionarlo al instante.
 - **Proactividad Total**: El Guardián escanea automáticamente al abrir archivos, al guardar o al detectar una inserción de código. No tienes que configurar nada.
+- **Ultra-Ligera y Optimizada**: Desarrollada con estándares de ingeniería de alto rendimiento. Las lecturas son asincrónicas y la gestión de memoria interna garantiza que VS Code jamás se congele, incluso en archivos monstruosos o en proyectos gigantes.
 - **Soporte Multilingüe**: Protección nativa para **Java, Python, JavaScript, TypeScript y React**.
 - **Auditoría Híbrida Inteligente**: Combina la velocidad de reglas locales con la profundidad semántica de LLMs bajo el modelo **BYOK (Bring Your Own Key)**.
-- **Privacidad Garantizada**: Tus API Keys se guardan de forma segura en tu sistema y tus datos solo viajan al proveedor que tú elijas (Gemini, OpenAI o Claude).
+- **Privacidad Garantizada**: Tus API Keys se guardan de forma segura en tu bóveda interna del Sistema Operativo (Credential Manager/Keychain) sin exponerse. Tus datos solo viajan al proveedor que tú elijas mediante encriptación punto a punto (Gemini, OpenAI o Claude).
 
 ## Inicio Rápido en 3 Pasos
 
@@ -55,6 +57,8 @@ Puedes ajustar tu nivel de seguridad en los **Settings** de VS Code:
 - Revisa nuestra guía de [Contribuciones](CONTRIBUTING.md).
 - Lee nuestra política de [Seguridad](SECURITY.md).
 
+---
+
 <details>
 <summary>🛠️ <b>Sección para Desarrolladores</b> (Haz clic para expandir)</summary>
 
@@ -65,12 +69,38 @@ Si deseas clonar este repo y trabajar en él:
 3. `F5` - Lanza una instancia de VS Code con la extensión cargada.
 
 ### Estructura del Proyecto
-- `src/core/`: Motores de detección y servicios base.
-- `src/auditors/`: Lógica de análisis local y LLM.
-- `src/config/`: Reglas por defecto y configuración.
+- `src/core/`: Motores de detección, servicios asíncronos y sistema anti-fugas.
+- `src/auditors/`: Lógica de análisis local (RegEx cacheadas) y motor LLM.
+- `src/config/`: Reglas de seguridad y configuraciones.
+- `src/providers/`: Motores de integración Visual (Diagnósticos y Quick Fix Actions mediante `WeakMap`).
 
-### Añadir Reglas Locales
-Puedes extender la seguridad añadiendo un archivo `rules.json` en la raíz de tu proyecto con el formato de objetos `Rule`.
+### Arquitectura de Rendimiento (Devs)
+AI Guardian está diseñado para no bloquear el Hilo Principal del *Extension Host*:
+- Utiliza **lecturas asincrónicas delegadas (fs.promises)** para la determinación del contexto de Workspace.
+- Aplica **WeakMaps** para vincular soluciones a diagnósticos visuales, forzando la liberación temporal de memoria (Garbage Collection) al cerrar archivos y previendo fugas de memoria OOM.
+- Las expresiones regulares se **pre-compilan una sola vez**; el conteo de bloques inyectados emplea evaluación atómica `match()` para no recrear buffers masivos.
+
+### Añadir Reglas Locales Personalizadas
+Si deseas que el Guardián detecte vulnerabilidades específicas del equipo de seguridad empresarial, crea un archivo `rules.json` directamente en la raíz de tu proyecto (Workspace).
+
+El formato del archivo debe ser un Arreglo de Reglas (`Array<Rule>`), por ejemplo:
+```json
+[
+  {
+    "id": "no-hardcoded-passwords",
+    "language": "any", 
+    "pattern": "(password|clave|secret)\\s*=\\s*['\\\"][a-zA-Z0-9]+['\\\"]",
+    "message": "Detectado un posible Hardcoding de credenciales en el código fuente.",
+    "severity": "HIGH"
+  }
+]
+```
+**Parámetros obligatorios:**
+- `id`: Nombre único que identifica a tu regla personalizada.
+- `language`: Lenguaje a inspeccionar (ej: `java`, `python`, `javascriptreact`, o `any` para auditar todos).
+- `pattern`: La expresión regular (Regex) que captura el texto del error.
+- `message`: La alerta que verá el desarrollador cuando se rompa la regla.
+- `severity`: Gravedad del error: `CRITICAL`, `HIGH`, `MEDIUM` o `LOW`.
 
 ### Ejecución de Pruebas
 Para asegurar la estabilidad del Guardián:

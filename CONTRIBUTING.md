@@ -46,12 +46,13 @@ AI Guardian enfatiza la confiabilidad. Por favor, asegúrate de que tus cambios 
   npm run test:unit
   ```
 
-## Estándares de Código
+## Estándares de Código y Rendimiento
 
 - Usa **TypeScript** para toda la lógica de la extensión.
 - Respeta el formateo existente (ESLint está configurado).
 - Escribe mensajes de commit descriptivos siguiendo [Conventional Commits](https://www.conventionalcommits.org/).
-- Asegúrate de que las nuevas funciones tengan sus correspondientes pruebas unitarias o de integración.
+- **Rendimiento:** Evita por completo la API sincrónica del subsistema de archivos (`fs.readFileSync`). Siempre usa asincronía (`fs.promises`) para no congelar la UI de VS Code. Las Expresiones Regulares deben pre-compilarse y cacheados.
+- Asegúrate de que las nuevas funciones tengan pruebas.
 
 ## Proceso de Pull Request
 

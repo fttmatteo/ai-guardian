@@ -2,6 +2,7 @@ export interface AuditResult {
   risk: 'alto' | 'medio' | 'bajo';
   reason: string;
   fixSuggestion: string;
+  originalBlock?: string;
   codeReplacement?: string;
   line?: number;
 }

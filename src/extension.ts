@@ -435,12 +435,13 @@ export function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    const auditCurrentFile = async (document: vscode.TextDocument, insertedCode?: string, insertedRange?: vscode.Range) => {
+    const auditCurrentFile = async (document: vscode.TextDocument, insertedCode?: string, insertedRange?: vscode.Range, forceLlm: boolean = false) => {
         if (!shouldAuditDocument(document)) {
             return;
         }
 
         const isInsertion = !!insertedCode;
+        const triggersLlm = isInsertion || forceLlm;
         const codeToAudit = isInsertion ? insertedCode! : document.getText();
         const baseRange = insertedRange || new vscode.Range(0, 0, document.lineCount, 0);
 
@@ -457,7 +458,7 @@ export function activate(context: vscode.ExtensionContext) {
             const localFindings = await localAuditor.audit(codeToAudit, languageId);
             
             let llmFindings: AuditResult[] = [];
-            if (isInsertion) {
+            if (triggersLlm) {
                 const maxPromptChars = getLlmMaxPromptChars();
                 const llmSnippet = codeToAudit.length > maxPromptChars
                     ? `${codeToAudit.slice(0, maxPromptChars)}\n\n/* Truncado por maxPromptChars (${maxPromptChars}) */`
@@ -502,7 +503,7 @@ export function activate(context: vscode.ExtensionContext) {
     const auditManualCommand = vscode.commands.registerCommand('ai-guardian.auditManual', async () => {
         const editor = vscode.window.activeTextEditor;
         if (editor) {
-            await auditCurrentFile(editor.document);
+            await auditCurrentFile(editor.document, undefined, undefined, true);
         }
     });
     context.subscriptions.push(auditManualCommand);

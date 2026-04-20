@@ -30,8 +30,25 @@ export class DiagnosticProvider {
 
         const diagnostics: vscode.Diagnostic[] = results.map(result => {
             let targetRange = insertedRange;
-            if (result.line !== undefined && result.line < document.lineCount) {
+            let isFullFileRange = targetRange.start.line === 0 && targetRange.end.line === document.lineCount;
+
+            if (result.originalBlock) {
+                const docText = document.getText();
+                const startIndex = docText.indexOf(result.originalBlock);
+                if (startIndex !== -1) {
+                    targetRange = new vscode.Range(
+                        document.positionAt(startIndex),
+                        document.positionAt(startIndex + result.originalBlock.length)
+                    );
+                    isFullFileRange = false;
+                }
+            }
+
+            if (isFullFileRange && result.line !== undefined && result.line < document.lineCount) {
                 targetRange = document.lineAt(result.line).range;
+                isFullFileRange = false;
+            } else if (isFullFileRange) {
+                targetRange = document.lineAt(0).range;
             }
 
             const diagnostic = new vscode.Diagnostic(
@@ -41,7 +58,7 @@ export class DiagnosticProvider {
             );
             diagnostic.source = 'AI Guardian';
             
-            if (result.codeReplacement) {
+            if (result.codeReplacement && !isFullFileRange) {
                 codeReplacementMap.set(diagnostic, result.codeReplacement);
             }
             

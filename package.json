@@ -154,7 +154,7 @@
     "test:ci": "npm run compile && npm run test:unit",
     "models:watch": "node scripts/provider-model-watch.cjs --fail-on-missing",
     "models:sync": "node scripts/provider-model-watch.cjs --sync --sync-preferences --fail-on-missing --fail-on-ambiguous",
-    "models:validate": "node scripts/provider-model-watch.cjs --fail-on-missing --fail-on-ambiguous --require-keys",
+    "models:validate": "node scripts/provider-model-watch.cjs --fail-on-missing --fail-on-ambiguous",
     "docs:sync-version": "node scripts/sync-version.cjs",
     "release": "standard-version",
     "release:patch": "standard-version --release-as patch",

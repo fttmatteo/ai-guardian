@@ -22,59 +22,29 @@ function writeReplacementPreferences(preferences) {
   fs.writeFileSync(PREFERENCES_PATH, `${JSON.stringify(preferences, null, 2)}\n`, 'utf8');
 }
 
-async function fetchOpenAiModels(apiKey) {
-  if (!apiKey) {
-    return [];
-  }
-
-  const response = await fetch('https://api.openai.com/v1/models', {
-    headers: {
-      Authorization: `Bearer ${apiKey}`
-    }
-  });
-
+async function fetchOpenRouterModels() {
+  const response = await fetch('https://openrouter.ai/api/v1/models');
+  
   if (!response.ok) {
-    throw new Error(`Error de API de modelos de OpenAI: ${response.status} ${await response.text()}`);
+    throw new Error(`Error de API de modelos de OpenRouter: ${response.status} ${await response.text()}`);
   }
 
   const payload = await response.json();
-  return (payload.data ?? []).map(item => item.id).filter(Boolean);
-}
+  const allModels = (payload.data ?? []).map(item => item.id).filter(Boolean);
 
-async function fetchGeminiModels(apiKey) {
-  if (!apiKey) {
-    return [];
-  }
+  const openAiModels = allModels
+    .filter(id => id.startsWith('openai/'))
+    .map(id => id.replace('openai/', ''));
 
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`);
-  if (!response.ok) {
-    throw new Error(`Error de API de modelos de Gemini: ${response.status} ${await response.text()}`);
-  }
+  const claudeModels = allModels
+    .filter(id => id.startsWith('anthropic/'))
+    .map(id => id.replace('anthropic/', ''));
 
-  const payload = await response.json();
-  return (payload.models ?? [])
-    .map(item => (item.name || '').replace(/^models\//, ''))
-    .filter(Boolean);
-}
+  const geminiModels = allModels
+    .filter(id => id.startsWith('google/'))
+    .map(id => id.replace('google/', ''));
 
-async function fetchClaudeModels(apiKey) {
-  if (!apiKey) {
-    return [];
-  }
-
-  const response = await fetch('https://api.anthropic.com/v1/models', {
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
-    }
-  });
-
-  if (!response.ok) {
-    throw new Error(`Error de API de modelos de Anthropic: ${response.status} ${await response.text()}`);
-  }
-
-  const payload = await response.json();
-  return (payload.data ?? []).map(item => item.id).filter(Boolean);
+  return { openAiModels, claudeModels, geminiModels };
 }
 
 function chooseReplacement(provider, profile, availableModels, replacementPreferences) {
@@ -202,27 +172,12 @@ async function main() {
   const syncPreferences = process.argv.includes('--sync-preferences') || sync;
   const failOnMissing = process.argv.includes('--fail-on-missing');
   const failOnAmbiguous = process.argv.includes('--fail-on-ambiguous');
-  const requireKeys = process.argv.includes('--require-keys');
-
-  const requiredProviders = [
-    { name: 'OPENAI_API_KEY', value: process.env.OPENAI_API_KEY },
-    { name: 'GEMINI_API_KEY', value: process.env.GEMINI_API_KEY },
-    { name: 'ANTHROPIC_API_KEY', value: process.env.ANTHROPIC_API_KEY }
-  ];
-
-  if (requireKeys) {
-    const missingKeys = requiredProviders.filter(item => !item.value).map(item => item.name);
-    if (missingKeys.length > 0) {
-      console.error(`Faltan secretos requeridos para validacion estricta: ${missingKeys.join(', ')}`);
-      process.exit(1);
-    }
-  }
 
   const catalog = readCatalog();
   const replacementPreferences = readReplacementPreferences();
-  const openAiModels = await fetchOpenAiModels(process.env.OPENAI_API_KEY);
-  const geminiModels = await fetchGeminiModels(process.env.GEMINI_API_KEY);
-  const claudeModels = await fetchClaudeModels(process.env.ANTHROPIC_API_KEY);
+  
+  console.log("Obteniendo modelos desde la API pública de OpenRouter...");
+  const { openAiModels, claudeModels, geminiModels } = await fetchOpenRouterModels();
 
   const providerModels = {
     openai: openAiModels,

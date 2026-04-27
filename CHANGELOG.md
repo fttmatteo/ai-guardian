@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/fttmatteo/ai-guardian/compare/v1.5.0...v1.6.0) (2026-04-27)
+
+
+### Features
+
+* add automated provider model catalog synchronization and validation workflows ([af1d336](https://github.com/fttmatteo/ai-guardian/commit/af1d3367f2caf4dd28e929ea9ead9225a3060fa3))
+* implement LLM and local rule audit engine with configurable provider support and retry logic ([93537d5](https://github.com/fttmatteo/ai-guardian/commit/93537d5063217dcb5fce11db188a56266328a92b))
+* introduce model catalog and provider monitoring with comprehensive replacement preferences ([b5842a6](https://github.com/fttmatteo/ai-guardian/commit/b5842a6c719c9c1a31767ecb038799598cf66e87))
+
 ## [1.5.0](https://github.com/fttmatteo/ai-guardian/compare/v1.4.6...v1.5.0) (2026-04-20)
 
 

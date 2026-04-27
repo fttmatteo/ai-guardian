@@ -44,7 +44,7 @@ async function fetchOpenRouterModels() {
     .filter(id => id.startsWith('google/'))
     .map(id => id.replace('google/', ''));
 
-  return { openAiModels, claudeModels, geminiModels };
+  return { openAiModels, claudeModels, geminiModels, allModels };
 }
 
 function chooseReplacement(provider, profile, availableModels, replacementPreferences) {
@@ -177,12 +177,13 @@ async function main() {
   const replacementPreferences = readReplacementPreferences();
   
   console.log("Obteniendo modelos desde la API pública de OpenRouter...");
-  const { openAiModels, claudeModels, geminiModels } = await fetchOpenRouterModels();
+  const { openAiModels, claudeModels, geminiModels, allModels } = await fetchOpenRouterModels();
 
   const providerModels = {
     openai: openAiModels,
     gemini: geminiModels,
-    claude: claudeModels
+    claude: claudeModels,
+    openrouter: allModels
   };
 
   const report = {
@@ -190,7 +191,8 @@ async function main() {
     counts: {
       openai: openAiModels.length,
       gemini: geminiModels.length,
-      claude: claudeModels.length
+      claude: claudeModels.length,
+      openrouter: allModels.length
     },
     missingModels: validateCatalog(catalog, providerModels),
     preferencePruned: [],
@@ -226,7 +228,7 @@ async function main() {
 
   fs.writeFileSync(REPORT_PATH, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
   console.log(`Reporte generado en: ${REPORT_PATH}`);
-  console.log(`Modelos detectados: OpenAI=${report.counts.openai}, Gemini=${report.counts.gemini}, Claude=${report.counts.claude}`);
+  console.log(`Modelos detectados: OpenAI=${report.counts.openai}, Gemini=${report.counts.gemini}, Claude=${report.counts.claude}, OpenRouter=${report.counts.openrouter}`);
 
   if (failOnMissing && report.missingModels.length > 0) {
     console.error('Modelos faltantes detectados en catalogo local:');

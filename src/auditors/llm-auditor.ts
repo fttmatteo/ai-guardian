@@ -243,8 +243,9 @@ export class LlmAuditor {
 
             if (provider === 'gemini') {
                 text = await this.runWithRetry(() => this.callGemini(apiKey, modelName, fullPrompt), maxRetries, timeoutMs);
-            } else if (provider === 'openai') {
-                text = await this.runWithRetry(() => this.callOpenAi(apiKey, modelName, fullPrompt, timeoutMs, baseUrl), maxRetries, timeoutMs + 1000);
+            } else if (provider === 'openai' || provider === 'openrouter') {
+                const effectiveBaseUrl = provider === 'openrouter' && !baseUrl ? 'https://openrouter.ai/api' : baseUrl;
+                text = await this.runWithRetry(() => this.callOpenAi(apiKey, modelName, fullPrompt, timeoutMs, effectiveBaseUrl), maxRetries, timeoutMs + 1000);
             } else if (provider === 'claude') {
                 text = await this.runWithRetry(() => this.callClaude(apiKey, modelName, fullPrompt, timeoutMs, baseUrl), maxRetries, timeoutMs + 1000);
             } else {

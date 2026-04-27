@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { deleteStoredLlmApiKey, getStoredLlmApiKey, setStoredLlmApiKey } from '../core/secret-storage';
 import modelCatalogData from './model-catalog.json';
 
-export type LlmProvider = 'gemini' | 'openai' | 'claude';
+export type LlmProvider = 'gemini' | 'openai' | 'claude' | 'openrouter';
 export type LlmProfile = 'free' | 'balanced' | 'deep';
 
 const MODEL_CATALOG = modelCatalogData as Record<LlmProvider, Record<LlmProfile, string[]>>;

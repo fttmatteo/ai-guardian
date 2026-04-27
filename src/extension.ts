@@ -114,7 +114,8 @@ export function activate(context: vscode.ExtensionContext) {
         const providerOptions: Array<{ label: string; value: LlmProvider }> = [
             { label: 'Gemini', value: 'gemini' },
             { label: 'OpenAI', value: 'openai' },
-            { label: 'Claude', value: 'claude' }
+            { label: 'Claude', value: 'claude' },
+            { label: 'OpenRouter', value: 'openrouter' }
         ];
 
         const profileOptions: Array<{ label: string; value: LlmProfile; description: string }> = [

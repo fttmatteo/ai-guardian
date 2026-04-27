@@ -100,7 +100,9 @@ export class LocalRuleAuditor {
                         risk: mapSeverityToRisk(rule.severity),
                         reason: rule.message,
                         fixSuggestion: 'Revise el código para eliminar el patrón detectado por la regla local.',
-                        line: getLineNumber(match.index)
+                        line: getLineNumber(match.index),
+                        category: rule.category,
+                        cwe: rule.cwe
                     });
                 }
             }

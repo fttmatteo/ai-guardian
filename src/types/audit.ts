@@ -5,6 +5,8 @@ export interface AuditResult {
   originalBlock?: string;
   codeReplacement?: string;
   line?: number;
+  category?: string;
+  cwe?: string;
 }
 
 export interface Rule {
@@ -13,4 +15,6 @@ export interface Rule {
   pattern: string;
   message: string;
   severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  category?: string;
+  cwe?: string;
 }

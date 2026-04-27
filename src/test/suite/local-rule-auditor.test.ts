@@ -47,4 +47,28 @@ const password = "mySuperSecretPassword";
         assert.strictEqual(findings.length, 1, 'Debería encontrar una sola vulnerabilidad en un pajar de 10.000 lineas.');
         assert.strictEqual(findings[0].line, 5000, 'El calculo de la linea vulnerada matematico fallo.');
     });
+
+    test('propaga correctamente las propiedades category y cwe al emitir el hallazgo', async () => {
+        const code = `
+            const token = "AKIA1234567890123456";
+        `;
+        const findings = await auditor.audit(code, 'javascript');
+        assert.ok(findings.length > 0, 'Debería encontrar la llave AWS falsa.');
+        const awsFinding = findings.find(f => f.reason.includes('AWS'));
+        assert.ok(awsFinding !== undefined, 'Debería haber un hallazgo de AWS.');
+        assert.strictEqual(awsFinding.category, 'Secrets', 'La categoría no se propagó.');
+        assert.strictEqual(awsFinding.cwe, 'CWE-798', 'El CWE no se propagó.');
+    });
+
+    test('soporta el lenguaje dockerfile y detecta el usuario root', async () => {
+        const dockerCode = `
+FROM node:18
+USER root
+RUN npm install
+        `;
+        const findings = await auditor.audit(dockerCode, 'dockerfile');
+        assert.ok(findings.length > 0, 'No detectó el USER root en el dockerfile.');
+        const rootFinding = findings.find(f => f.category === 'Infra' && f.cwe === 'CWE-269');
+        assert.ok(rootFinding !== undefined, 'No encontró la regla específica de Docker.');
+    });
 });

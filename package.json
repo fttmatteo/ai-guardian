@@ -120,7 +120,7 @@
       },
       {
         "command": "ai-guardian.limpiarByok",
-        "title": "AI Guardian: Limpiar API Keys BYOK"
+        "title": "AI Guardian: Limpiar configuración y BYOK"
       },
       {
         "command": "ai-guardian.estadoByok",

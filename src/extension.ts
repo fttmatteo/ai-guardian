@@ -128,7 +128,7 @@ export function activate(context: vscode.ExtensionContext) {
             providerOptions.map(option => ({
                 label: option.label,
                 value: option.value,
-                description: option.value === currentProvider ? 'Actual' : undefined
+                description: currentProvider && option.value === currentProvider ? 'Actual' : undefined
             })),
             {
                 placeHolder: 'Selecciona el proveedor LLM para BYOK'
@@ -221,19 +221,25 @@ export function activate(context: vscode.ExtensionContext) {
 
     const limpiarByokCommand = vscode.commands.registerCommand('ai-guardian.limpiarByok', async () => {
         const confirmation = await vscode.window.showWarningMessage(
-            'Se eliminaran todas las API keys BYOK guardadas en SecretStorage.',
+            'Se eliminara TODA la configuracion de BYOK (API keys y preferencias de modelo).',
             { modal: true },
-            'Eliminar',
+            'Limpiar todo',
             'Cancelar'
         );
 
-        if (confirmation !== 'Eliminar') {
+        if (confirmation !== 'Limpiar todo') {
             return;
         }
 
+        const llmConfig = vscode.workspace.getConfiguration('ai-guardian.llm');
+        await llmConfig.update('provider', undefined, vscode.ConfigurationTarget.Global);
+        await llmConfig.update('profile', undefined, vscode.ConfigurationTarget.Global);
+        await llmConfig.update('model', undefined, vscode.ConfigurationTarget.Global);
+        
         await clearAllLlmApiKeys();
-        Logger.log('Se eliminaron todas las API keys BYOK guardadas.');
-        vscode.window.showInformationMessage('AI Guardian: API keys BYOK eliminadas correctamente.');
+        
+        Logger.log('Se elimino toda la configuracion y API keys BYOK.');
+        vscode.window.showInformationMessage('AI Guardian: Configuracion y API keys eliminadas correctamente.');
     });
     context.subscriptions.push(limpiarByokCommand);
 
@@ -416,22 +422,28 @@ export function activate(context: vscode.ExtensionContext) {
     });
     context.subscriptions.push(estadoCuotaPanelCommand);
 
-    void getLlmApiKey().then(async apiKey => {
-        if (!apiKey) {
-            const selection = await vscode.window.showInformationMessage(
-                'AI Guardian (BYOK): configura proveedor y API key para habilitar auditoria LLM.',
-                'Configurar ahora',
-                'Ver estado BYOK',
-                'Mas tarde'
-            );
+    const checkByokOnStart = async () => {
+        try {
+            const apiKey = await getLlmApiKey();
+            if (!apiKey) {
+                const selection = await vscode.window.showInformationMessage(
+                    'AI Guardian (BYOK): configura proveedor y API key para habilitar auditoria LLM.',
+                    'Configurar ahora',
+                    'Ver estado BYOK',
+                    'Mas tarde'
+                );
 
-            if (selection === 'Configurar ahora') {
-                await vscode.commands.executeCommand('ai-guardian.configurarByok');
-            } else if (selection === 'Ver estado BYOK') {
-                await vscode.commands.executeCommand('ai-guardian.estadoByok');
+                if (selection === 'Configurar ahora') {
+                    await vscode.commands.executeCommand('ai-guardian.configurarByok');
+                } else if (selection === 'Ver estado BYOK') {
+                    await vscode.commands.executeCommand('ai-guardian.estadoByok');
+                }
             }
+        } catch (error) {
+            Logger.error('Error al verificar BYOK al inicio.', error);
         }
-    });
+    };
+    void checkByokOnStart();
 
     const auditCurrentFile = async (document: vscode.TextDocument, insertedCode?: string, insertedRange?: vscode.Range, forceLlm: boolean = false) => {
         if (!shouldAuditDocument(document)) {

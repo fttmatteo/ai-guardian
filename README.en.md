@@ -3,67 +3,73 @@
 *[Leer en Español](README.md)*
 
 <p align="center">
-  <img src="docs/logo.png" width="200" alt="AI Guardian Logo">
+  <img src="docs/logo.png" width="180" alt="AI Guardian Logo">
 </p>
 
 <p align="center">
-  <strong>Intelligent and preventive security for your AI-assisted code.</strong><br>
-  <em>Protect your workflow by detecting OWASP risks in real-time.</em>
+  <strong>The ultimate shield for your AI-assisted code.</strong><br>
+  <em>Don't let the speed of AI compromise your production security.</em>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.6.0-blue.svg" alt="Version">
-  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/Security-OWASP-red" alt="Security Focused">
-  <img src="https://img.shields.io/badge/Mode-Proactive-orange" alt="Proactive Auditing">
+  <img src="https://img.shields.io/badge/Version-1.6.0-blue.svg?style=flat-square" alt="Version">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/Security-OWASP_Top_10-red?style=flat-square" alt="OWASP">
+  <img src="https://img.shields.io/badge/Mode-Smart_Hybrid-orange?style=flat-square" alt="Hybrid">
 </p>
 
-## What is AI Guardian?
+---
 
-AI Guardian is a VS Code extension designed to audit your code's security, especially that generated or assisted by Artificial Intelligence. It combines ultra-fast local static analysis with the semantic power of advanced LLM models under a BYOK (Bring Your Own Key) model.
+## Why AI Guardian?
 
-### Features
+In the era of AI-assisted development, code is generated faster than ever, but it also introduces hidden risks. **AI Guardian** is your last line of defense.
 
-- **Industrial Auditing (OWASP)**: Detects SQL Injections, Path Traversal, SSRF, and Weak Cryptography aligned with OWASP Top 10 standards.
-- **Auto-Correction (Quick Fixes)**: We don't just detect, we fix! Click the yellow lightbulb (`Ctrl + .`) over a vulnerability and the AI will surgically inject the secure code to solve it instantly without breaking the rest of your file. *(💡 **Pro Tip:** If your document has multiple vulnerabilities, fix one using Quick Fix and hit `Ctrl + S` to save. This forces the Guardian to immediately recalculate perfect text coordinates for your next corrections).*
-- **Total Proactivity**: The Guardian automatically scans upon opening files, saving, or detecting code insertions. You don't have to configure anything.
-- **Ultra-Lightweight & Optimized**: Built with high-performance engineering standards. Readings are asynchronous and internal memory management guarantees that VS Code never freezes, even on monstrous files or giant projects.
-- **Multilingual Support**: Native protection for **Java, Python, JavaScript, TypeScript, and React**.
-- **Intelligent Hybrid Auditing**: Combines the speed of local rules with the semantic depth of LLMs under the **BYOK (Bring Your Own Key)** model.
-- **Guaranteed Privacy**: Your API Keys are securely stored in your Operating System's internal vault (Credential Manager/Keychain) safely unexposed. Your data only travels to the provider you choose via end-to-end encryption (Gemini, OpenAI, or Claude).
+Unlike traditional linters, we combine **ultra-fast local analysis** with the **semantic depth of the world's most powerful LLMs**, ensuring every line of code is secure, private, and professional.
 
-## Quick Start in 3 Steps
+### Key Features
+
+- **🛡️ Industrial Auditing (OWASP)**: Total shield against SQL Injection, Path Traversal, SSRF, and Weak Cryptography. Aligned with international **OWASP Top 10** standards.
+- **⚡ Surgical Auto-Correction (Quick Fixes)**: Found a risk? Fix it instantly. With `Ctrl + .` (Quick Fix), our AI injects the exact security patch, respecting your code style without breaking the rest of your file.
+- **🤖 Smart Hybrid Intelligence (BYOK)**: You are in control. Use your own API Keys (**Gemini, OpenAI, Claude, or OpenRouter**) for deep analysis, while our local rules work in the background at no cost.
+- **🔒 Bank-Grade Privacy**: Your API Keys never leave your machine; they are stored in your **Operating System's secure vault** (Keychain/Credential Manager). Your data only travels to the provider you choose via encrypted channels.
+- **🚀 Extreme Performance**: Built to stay out of your way. Asynchronous auditing, smart memory management, and zero-lag performance, even in large-scale projects.
+
+---
+
+## Quick Start
 
 ### 1. Installation
+Search for **"AI Guardian"** in the VS Code Marketplace and install it with one click.
 
-Search for **"AI Guardian"** in the VS Code Marketplace and install it.
+### 2. Configuration (Recommended)
+To unlock the full power of semantic detection:
+1. `Ctrl + Shift + P` -> `AI Guardian: Configurar BYOK`.
+2. Choose your favorite provider and enter your API Key.
+3. *Done! You now have a security expert auditing your code in real-time.*
 
-### 2. Configuration (Optional but Recommended)
+### 3. Usage Modes
+- **Proactive Mode (Automatic):** The Guardian watches your code insertions. If it detects a new block (≥ 5 lines), it will automatically trigger AI analysis if BYOK is configured.
+- **Local Auditing (Always On):** Instant analysis based on local rules that doesn't consume quota or require internet.
+- **Deep Manual Scan:** Run `AI Guardian: Analizar archivo actual` for a complete and exhaustive report of your entire document.
 
-To activate the power of AI and semantic audits:
-1. Open the command palette (`Ctrl+Shift+P`).
-2. Run: `AI Guardian: Configurar BYOK (Proveedor/API Key)`.
-3. Enter your Gemini, OpenAI, or Claude API Key.
-
-### 3. Get to work!
-
-- **Automatic Mode:** When opening or saving files, the Guardian uses its fast **local rules engines (Offline)** to immediately detect leaks without spending your API Key quota. It only automatically resorts to the Artificial Intelligence (LLM) engine if it detects that you have *pasted or injected* a considerable block of code (≥ 5 lines).
-- **Deep AI Mode:** If you want to force the Artificial Intelligence to scan your entire file from top to bottom regardless of its size to get mathematical and semantic curations, execute the command: `AI Guardian: Analizar archivo actual`.
+---
 
 ## Customization
+Tailor the experience to your workflow in VS Code settings:
+- **Shadow Mode**: Stay focused. Only high-risk alerts will interrupt with popups; the rest will appear discreetly in your problems panel.
+- **Usage Profiles**: Select between `free`, `balanced`, or `deep` to optimize your quota consumption based on desired depth.
 
-You can adjust your security level in the VS Code **Settings**:
-- **Shadow Mode**: If active, only critical alerts will interrupt with popups; the rest remain silent in the problems list.
-- **AI Profiles**: Select between `free`, `balanced`, or `deep` to balance the cost and quality of the analysis.
+---
 
 ## Contributions and Security
-
-Do you want to improve the Guardian or found something? 
+Want to help make the world's code safer?
 - Review our [Contribution Guide](CONTRIBUTING.en.md).
 - Read our [Security Policy](SECURITY.en.md).
 
+---
+
 <details>
-<summary>🛠️ <b>Developer Section</b> (Click to expand)</summary>
+<summary><b>Developer Section</b> (Click to expand)</summary>
 
 ### Compilation and Development
 
@@ -74,10 +80,10 @@ If you want to clone this repo and work on it:
 
 ### Project Structure
 
-- `src/core/`: Detection engines, asynchronous services, and memory management.
-- `src/auditors/`: Local analysis logic (Cached RegEx) and LLM engine.
-- `src/config/`: Default rules and configuration.
-- `src/providers/`: Visual integration engines (Diagnostics and Quick Fix Actions via `WeakMap`).
+- `src/core/`: Detection engines, project context, and asynchronous memory management.
+- `src/auditors/`: Local analysis logic (Cached RegEx) and LLM engine (BYOK).
+- `src/config/`: Default security rules and configuration.
+- `src/providers/`: Visual integration (Diagnostics and Quick Fix Actions via `WeakMap`).
 
 ### Performance Architecture (Devs)
 
@@ -111,13 +117,13 @@ The file format must be an Array of Rules (`Array<Rule>`), for example:
 
 ### Running Tests
 
-To ensure the Guardian's stability:
-- `npm run test:unit` - Runs unit tests for core logic.
-- `npm run test` - Launches integration tests in a VS Code instance.
+To ensure the stability of the Guardian:
+- `npm run test:unit` - Compiles and runs unit tests for the core logic.
+- `npm run test` - Launches integration tests in a clean VS Code instance.
 </details>
 
 ## Credits and License
 
 Created and maintained by **[Mateo Valencia Ardila](https://github.com/fttmatteo)**.
 
-This software operates under the **MIT License**. You are free to distribute, edit or use this architectural base even for commercial development under the mandatory condition of explicitly preserving the copyright paragraphs and acknowledgement to Mateo Valencia as the master creator. (Read the `LICENSE` document for more legal instructions).
+This software operates under the **MIT License**. You are free to distribute, edit, or use this architectural base even for commercial development, provided that you explicitly preserve the copyright and acknowledgment to Mateo Valencia as the original creator. (See the `LICENSE` document for full legal details).

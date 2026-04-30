@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/fttmatteo/ai-guardian/compare/v1.6.0...v1.7.0) (2026-04-30)
+
+
+### Features
+
+* implement extension activation logic with BYOK LLM provider configuration and usage tracking ([94ce0ff](https://github.com/fttmatteo/ai-guardian/commit/94ce0ff45300f482e1e9735cca85a84a6796bfd9))
+
 ## [1.6.0](https://github.com/fttmatteo/ai-guardian/compare/v1.5.0...v1.6.0) (2026-04-27)
 
 

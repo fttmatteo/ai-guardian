@@ -46,7 +46,6 @@
             "claude",
             "openrouter"
           ],
-          "default": "gemini",
           "description": "Proveedor LLM a usar en modo BYOK."
         },
         "ai-guardian.llm.profile": {
@@ -56,7 +55,6 @@
             "balanced",
             "deep"
           ],
-          "default": "free",
           "description": "Perfil de uso LLM: free (bajo costo), balanced o deep (mayor profundidad)."
         },
         "ai-guardian.llm.model": {

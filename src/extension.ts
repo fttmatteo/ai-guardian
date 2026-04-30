@@ -143,7 +143,7 @@ export function activate(context: vscode.ExtensionContext) {
             profileOptions.map(option => ({
                 label: option.label,
                 value: option.value,
-                description: `${option.description}${option.value === currentProfile ? ' (Actual)' : ''}`
+                description: `${option.description}${currentProfile && option.value === currentProfile ? ' (Actual)' : ''}`
             })),
             {
                 placeHolder: 'Selecciona el perfil de uso LLM'
@@ -259,9 +259,9 @@ export function activate(context: vscode.ExtensionContext) {
         const usageFileLabel = activeEditor?.document.fileName ?? 'sin archivo activo';
 
         const statusLines = [
-            `Proveedor: ${provider}`,
-            `Perfil: ${profile}`,
-            `Modelo: ${model}`,
+            `Proveedor: ${provider ?? 'no configurado'}`,
+            `Perfil: ${profile ?? 'no configurado'}`,
+            `Modelo: ${model || 'no configurado'}`,
             `Base URL: ${baseUrl}`,
             `Timeout: ${timeoutMs} ms`,
             `Reintentos: ${maxRetries}`,
@@ -370,9 +370,9 @@ export function activate(context: vscode.ExtensionContext) {
                     <section class="card">
                         <h2>Configuracion activa</h2>
                         <ul>
-                            <li><strong>Proveedor:</strong> ${provider}</li>
-                            <li><strong>Perfil:</strong> ${profile}</li>
-                            <li><strong>Modelo:</strong> ${model}</li>
+                            <li><strong>Proveedor:</strong> ${provider ?? 'no configurado'}</li>
+                            <li><strong>Perfil:</strong> ${profile ?? 'no configurado'}</li>
+                            <li><strong>Modelo:</strong> ${model || 'no configurado'}</li>
                             <li><strong>Max llamadas/hora:</strong> ${maxCallsPerHour}</li>
                             <li><strong>Max auditorias por archivo/hora:</strong> ${maxAuditsPerFilePerHour}</li>
                             <li><strong>Max prompt chars:</strong> ${maxPromptChars}</li>
@@ -417,8 +417,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(estadoCuotaPanelCommand);
 
     void getLlmApiKey().then(async apiKey => {
-        const alreadyPrompted = onboardingState.get<boolean>('ai-guardian.onboarding.promptedOnce', false);
-        if (!apiKey && !alreadyPrompted) {
+        if (!apiKey) {
             const selection = await vscode.window.showInformationMessage(
                 'AI Guardian (BYOK): configura proveedor y API key para habilitar auditoria LLM.',
                 'Configurar ahora',
@@ -431,8 +430,6 @@ export function activate(context: vscode.ExtensionContext) {
             } else if (selection === 'Ver estado BYOK') {
                 await vscode.commands.executeCommand('ai-guardian.estadoByok');
             }
-
-            await onboardingState.update('ai-guardian.onboarding.promptedOnce', true);
         }
     });
 
@@ -442,15 +439,12 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         const isInsertion = !!insertedCode;
-        const triggersLlm = isInsertion || forceLlm;
+        const apiKey = await getLlmApiKey();
+        const triggersLlm = (isInsertion || forceLlm) && !!apiKey;
         const codeToAudit = isInsertion ? insertedCode! : document.getText();
         const baseRange = insertedRange || new vscode.Range(0, 0, document.lineCount, 0);
 
-        await vscode.window.withProgress({
-            location: vscode.ProgressLocation.Notification,
-            title: isInsertion ? "AI Guardian: Analizando insercion..." : "AI Guardian: Auditando archivo...",
-            cancellable: false
-        }, async (progress) => {
+        const runAudit = async () => {
             const languageId = document.languageId;
             const projectContext = projectContextService.getEffectiveContext(languageId);
 
@@ -498,7 +492,17 @@ export function activate(context: vscode.ExtensionContext) {
             }
             
             Logger.log(`Auditoria finalizada. Hallazgos: ${allFindings.length}`);
-        });
+        };
+
+        if (forceLlm) {
+            await vscode.window.withProgress({
+                location: vscode.ProgressLocation.Notification,
+                title: "AI Guardian: Auditando archivo...",
+                cancellable: false
+            }, runAudit);
+        } else {
+            await runAudit();
+        }
     };
 
     const auditManualCommand = vscode.commands.registerCommand('ai-guardian.auditManual', async () => {

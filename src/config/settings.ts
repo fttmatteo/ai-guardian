@@ -11,19 +11,24 @@ export async function getLlmApiKey(): Promise<string | undefined> {
   return getStoredLlmApiKey();
 }
 
-export function getLlmProvider(): LlmProvider {
+export function getLlmProvider(): LlmProvider | undefined {
   const llmConfig = vscode.workspace.getConfiguration('ai-guardian.llm');
-  return llmConfig.get<LlmProvider>('provider', 'gemini');
+  return llmConfig.get<LlmProvider>('provider');
 }
 
-export function getLlmProfile(): LlmProfile {
+export function getLlmProfile(): LlmProfile | undefined {
   const llmConfig = vscode.workspace.getConfiguration('ai-guardian.llm');
-  return llmConfig.get<LlmProfile>('profile', 'free');
+  return llmConfig.get<LlmProfile>('profile');
 }
 
 export function getRecommendedModels(provider?: LlmProvider, profile?: LlmProfile): string[] {
   const selectedProvider = provider ?? getLlmProvider();
   const selectedProfile = profile ?? getLlmProfile();
+  
+  if (!selectedProvider || !selectedProfile) {
+    return [];
+  }
+  
   return MODEL_CATALOG[selectedProvider][selectedProfile];
 }
 
@@ -32,11 +37,17 @@ export function getLlmModel(provider?: LlmProvider): string {
   const selectedProfile = getLlmProfile();
   const llmConfig = vscode.workspace.getConfiguration('ai-guardian.llm');
   const configured = llmConfig.get<string>('model', '');
+  
   if (configured && configured.trim().length > 0) {
     return configured;
   }
 
-  return getRecommendedModels(selectedProvider, selectedProfile)[0];
+  if (!selectedProvider || !selectedProfile) {
+    return '';
+  }
+
+  const recommended = getRecommendedModels(selectedProvider, selectedProfile);
+  return recommended.length > 0 ? recommended[0] : '';
 }
 
 export function getLlmBaseUrl(): string | undefined {

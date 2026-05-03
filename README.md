@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Versión-1.8.0-blue.svg?style=flat-square" alt="Versión">
+  <img src="https://img.shields.io/badge/Versión-1.9.0-blue.svg?style=flat-square" alt="Versión">
   <img src="https://img.shields.io/badge/Licencia-MIT-green.svg?style=flat-square" alt="Licencia">
   <img src="https://img.shields.io/badge/Seguridad-OWASP_Top_10-red?style=flat-square" alt="OWASP">
   <img src="https://img.shields.io/badge/Modo-Híbrido_Inteligente-orange?style=flat-square" alt="Híbrido">

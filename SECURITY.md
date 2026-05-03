@@ -8,7 +8,7 @@ Proporcionare actualizaciones de seguridad para las siguientes versiones:
 
 | Versión | ¿Soportada Activamente? |
 | ------- | ------------------ |
-| v1.8.x | :white_check_mark: |
+| v1.9.x | :white_check_mark: |
 | Antiguas | :x:                |
 
 ## Mejores Prácticas BYOK

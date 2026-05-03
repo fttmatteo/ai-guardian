@@ -8,7 +8,7 @@ I will provide security updates for the following versions:
 
 | Version | Actively Supported? |
 | ------- | ------------------ |
-| v1.8.x | :white_check_mark: |
+| v1.9.x | :white_check_mark: |
 | Old     | :x:                |
 
 ## BYOK Best Practices
